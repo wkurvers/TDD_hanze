@@ -1,3 +1,5 @@
+package game;
+
 public interface Hive {
     /**
      * Play a new tile.
