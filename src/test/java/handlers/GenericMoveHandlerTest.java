@@ -1,4 +1,5 @@
 package handlers;
+import creatures.Tile;
 import game.Hive;
 import org.junit.jupiter.api.Test;
 
@@ -27,6 +28,6 @@ public class GenericMoveHandlerTest {
     @Test
     public void testIfCanMakeValidMove() {
         GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler(Hive.Player.WHITE);
-        genericMoveHandler.canMakeMove(0,0,1,-1);
+        genericMoveHandler.canMakeMove(new Tile(),0,0,1,-1);
     }
 }

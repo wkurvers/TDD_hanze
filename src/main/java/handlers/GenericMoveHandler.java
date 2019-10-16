@@ -1,6 +1,7 @@
 package handlers;
 
 
+import creatures.Tile;
 import game.Hive;
 
 public class GenericMoveHandler {
@@ -47,14 +48,34 @@ public class GenericMoveHandler {
         return true;
     }
 
-    protected boolean valideCreatureSpecific() {
+    protected boolean valideCreatureSpecific(Tile tileToMove, int fromQ, int fromR, int toQ, int toR) throws Exception {
         /*
         Each creature has its own moving constraints
          */
-        return true;
+        CreatureMoveHandler creatureMoveHandler;
+        switch (tileToMove.getCreature()) {
+            case SOLDIER_ANT:
+                creatureMoveHandler = AntMoveHandler.getInstance();
+                break;
+            case GRASSHOPPER:
+                creatureMoveHandler = GrasshopperMoveHandler.getInstance();
+                break;
+            case QUEEN_BEE:
+                creatureMoveHandler = QueenBeeMoveHandler.getInstance();
+                break;
+            case SPIDER:
+                creatureMoveHandler = SpiderMoveHandler.getInstance();
+                break;
+            case BEETLE:
+                creatureMoveHandler = BeetleMoveHandler.getInstance();
+                break;
+            default:
+                throw new Exception("No valid creature was specified");
+        }
+        return creatureMoveHandler.isValidMove(fromQ, fromR, toQ, toR);
     }
 
-    public boolean canMakeMove(int fromQ, int fromR, int toQ, int toR) {
+    public boolean canMakeMove(Tile tileToMove, int fromQ, int fromR, int toQ, int toR) {
         return true;
     }
 }
