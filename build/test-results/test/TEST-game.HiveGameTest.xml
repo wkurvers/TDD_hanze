@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="game.HiveGameTest" tests="4" skipped="0" failures="0" errors="0" timestamp="2019-10-29T12:12:01" hostname="jelmer-Aspire-V5-591G" time="0.03">
+  <properties/>
+  <testcase name="testWhiteWinsWhenShouldNotWin()" classname="game.HiveGameTest" time="0.022"/>
+  <testcase name="testSwitchPlayerToBlackAfterFirstMove()" classname="game.HiveGameTest" time="0.002"/>
+  <testcase name="testWhiteWinsWhenShouldWin()" classname="game.HiveGameTest" time="0.002"/>
+  <testcase name="testFirstPlayerIsWhite()" classname="game.HiveGameTest" time="0.001"/>
+  <system-out><![CDATA[[creatures.Tile@6ee4d690, null, null, null, creatures.Tile@6ee4d690, creatures.Tile@2d2af05e]
+[creatures.Tile@49cb73ff, creatures.Tile@49cb73ff, creatures.Tile@49cb73ff, creatures.Tile@49cb73ff, creatures.Tile@49cb73ff, creatures.Tile@49cb73ff]
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

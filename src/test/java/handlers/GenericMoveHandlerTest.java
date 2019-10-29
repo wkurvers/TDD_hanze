@@ -1,33 +1,36 @@
 package handlers;
 import creatures.Tile;
 import game.Hive;
+import game.HiveGame;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 public class GenericMoveHandlerTest {
 
-    @Test
-    public void testValidateQueenBeeHasBeenPlaced() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler(Hive.Player.BLACK);
-        assertTrue(genericMoveHandler.validateQueenBee());
+    @AfterEach
+    void resetHandler() {
+        GenericMoveHandler.getGenericMoveHandler().resetMoveHandler();
     }
+
 
     @Test
     public void testValidateTileHasAnyContact() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler(Hive.Player.WHITE);
+        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
         assertTrue(genericMoveHandler.validateContact());
     }
 
     @Test
     public void testValidateNoIslandsExists() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler(Hive.Player.BLACK);
+        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
         assertTrue(genericMoveHandler.validateNoIslands());
     }
 
     @Test
     public void testIfCanMakeValidMove() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler(Hive.Player.WHITE);
+        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
         genericMoveHandler.canMakeMove(new Tile(),0,0,1,-1);
     }
 }

@@ -3,6 +3,7 @@ package game;
 import creatures.Tile;
 
 import java.util.ArrayList;
+import java.util.EmptyStackException;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -17,6 +18,10 @@ public class Board {
         return instance;
     }
 
+    public void resetBoard() {
+        this.gameBoard = new HashMap<>();
+    }
+
     private Board() {}
 
     public HashMap<Integer, HashMap<Integer, Stack<Tile>>> getBoard() {
@@ -26,18 +31,17 @@ public class Board {
     public Stack<Tile> getPosition(int q, int r) {
         try {
             return gameBoard.get(q).get(r);
-        } catch (ArrayIndexOutOfBoundsException ex) {
+        } catch (NullPointerException ex) {
             return null;
         }
     }
 
     public Tile getTopTileAtPosition(int q, int r) {
         try {
-            return gameBoard.get(q).get(r).pop();
-        } catch(NullPointerException ex) {
+            return gameBoard.get(q).get(r).peek();
+        } catch(NullPointerException|EmptyStackException ex) {
             return null;
         }
-
     }
 
     public ArrayList<Tile> getNeighbours(int q, int r) {
@@ -63,20 +67,13 @@ public class Board {
         return neighboursList;
     }
 
-    public void placeTileAtPosition(int q, int r, Tile tile) throws Hive.IllegalMove, ArrayIndexOutOfBoundsException {
-        /*
-            Do all the tests
-         */
-        if (false) {
-            throw new Hive.IllegalMove("Cannot place the Tile");
-        } else {
-            if (gameBoard.get(q) == null) {
-                gameBoard.put(q,new HashMap<Integer, Stack<Tile>>());
-                gameBoard.get(q).put(r, new Stack<Tile>());
-            } else if (gameBoard.get(q).get(r) == null) {
-                gameBoard.get(q).put(r, new Stack<Tile>());
-            }
-            gameBoard.get(q).get(r).push(tile);
+    public void placeTileAtPosition(int q, int r, Tile tile){
+        if (gameBoard.get(q) == null) {
+            gameBoard.put(q,new HashMap<Integer, Stack<Tile>>());
+            gameBoard.get(q).put(r, new Stack<Tile>());
+        } else if (gameBoard.get(q).get(r) == null) {
+            gameBoard.get(q).put(r, new Stack<Tile>());
         }
+        gameBoard.get(q).get(r).push(tile);
     }
 }

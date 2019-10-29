@@ -9,15 +9,19 @@ public class Tile {
     public Tile() {
 
     }
-    protected void setCreature(Hive.Tile creature) {
+    public void setCreature(Hive.Tile creature) {
         this.creature = creature;
     }
 
-    protected void setPlayedByPlayer(Hive.Player playedByPlayer) {
+    public void setPlayedByPlayer(Hive.Player playedByPlayer) {
         this.playedByPlayer = playedByPlayer;
     }
 
     public Hive.Tile getCreature() {
         return creature;
+    }
+
+    public Hive.Player getPlayedByPlayer() {
+        return playedByPlayer;
     }
 }

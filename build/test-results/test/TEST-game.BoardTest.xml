@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="game.BoardTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-10-15T11:56:18" hostname="jelmer-Aspire-V5-591G" time="0.016">
+<testsuite name="game.BoardTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2019-10-29T12:12:01" hostname="jelmer-Aspire-V5-591G" time="0.006">
   <properties/>
-  <testcase name="testPlaceTileAtLocation()" classname="game.BoardTest" time="0.016"/>
+  <testcase name="testGetFilledLocation()" classname="game.BoardTest" time="0.0"/>
+  <testcase name="testGetTileAtLocation()" classname="game.BoardTest" time="0.001"/>
+  <testcase name="testGetEmptyLocation()" classname="game.BoardTest" time="0.001"/>
+  <testcase name="testGetNeighboursForLocation()" classname="game.BoardTest" time="0.0"/>
+  <testcase name="testPlaceTileAtLocation()" classname="game.BoardTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

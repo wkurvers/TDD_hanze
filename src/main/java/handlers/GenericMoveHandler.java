@@ -4,21 +4,26 @@ package handlers;
 import creatures.Tile;
 import game.Hive;
 
+import java.util.HashMap;
+
 public class GenericMoveHandler {
     private static GenericMoveHandler instance;
-    private Hive.Player player;
     /*
     This class implements all the generic requirements when moving a tile
     */
-    public static GenericMoveHandler getGenericMoveHandler(Hive.Player player){
+    public static GenericMoveHandler getGenericMoveHandler(){
         if (instance == null) {
-            instance = new GenericMoveHandler(player);
+            instance = new GenericMoveHandler();
         }
         return instance;
     }
 
-    private GenericMoveHandler(Hive.Player player) {
-        this.player = player;
+    public void resetMoveHandler() {
+        instance = null;
+    }
+
+    private GenericMoveHandler() {
+
     }
 
     private void getGameContext() {

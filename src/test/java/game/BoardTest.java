@@ -1,6 +1,8 @@
 package game;
 
 import creatures.Tile;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,10 +12,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
 
-    @Test
-    void testGetBoardReturnsBoard() {
-        Board gameBoard = Board.getBoardInstance();
-        assertEquals(gameBoard.getBoard().getClass().getName(),"[[Ljava.util.Stack;");
+    @AfterEach
+    void resetBoard() {
+        Board.getBoardInstance().resetBoard();
     }
 
     @Test
@@ -23,14 +24,14 @@ class BoardTest {
     }
 
     @Test
-    void testGetFilledLocation() throws Hive.IllegalMove, ArrayIndexOutOfBoundsException {
+    void testGetFilledLocation() throws ArrayIndexOutOfBoundsException {
         Board gameBoard = Board.getBoardInstance();
         gameBoard.placeTileAtPosition(0,0, new Tile());
         assertEquals(gameBoard.getPosition(0,0).getClass().getName(),"java.util.Stack");
     }
 
     @Test
-    void testGetTileAtLocation() throws Hive.IllegalMove {
+    void testGetTileAtLocation(){
         Board gameBoard = Board.getBoardInstance();
         Tile newTile = new Tile();
         gameBoard.placeTileAtPosition(0,0,newTile);
@@ -38,14 +39,14 @@ class BoardTest {
     }
 
     @Test
-    void testPlaceTileAtLocation() throws Hive.IllegalMove {
+    void testPlaceTileAtLocation(){
         Board gameBoard = Board.getBoardInstance();
         Tile newTile = new Tile();
         gameBoard.placeTileAtPosition(-3,1,newTile);
         assertEquals(gameBoard.getTopTileAtPosition(-3,1),newTile);
     }
 
-    private ArrayList setupBoardForTestGetNeighboursForLocation() throws Hive.IllegalMove {
+    private ArrayList setupBoardForTestGetNeighboursForLocation(){
         Board gameBoard = Board.getBoardInstance();
 
         Tile topLeftTile = new Tile();
@@ -76,7 +77,7 @@ class BoardTest {
         return returnDataList;
     }
     @Test
-    void testGetNeighboursForLocation() throws Hive.IllegalMove {
+    void testGetNeighboursForLocation() {
         ArrayList dataList = setupBoardForTestGetNeighboursForLocation();
         Board gameBoard = (Board) dataList.get(0);
         ArrayList<Tile> neighboursList = (ArrayList<Tile>) dataList.get(1);
