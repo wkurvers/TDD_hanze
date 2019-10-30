@@ -9,26 +9,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HiveGameTest {
     @AfterEach
-    void resetGame() {HiveGame.getGame().resetGame();}
+    void resetGame() {
+        HiveGame.getGame().resetGame();
+    }
 
     @Test
-    public void testFirstPlayerIsWhite() {
+    void testFirstPlayerIsWhite() {
         HiveGame game = HiveGame.getGame();
         assertEquals(Hive.Player.WHITE,game.getCurrentPlayer());
     }
 
     @Test
-    public void testSwitchPlayerToBlackAfterFirstMove() {
+    void testSwitchPlayerToBlackAfterFirstMove() {
         HiveGame game = HiveGame.getGame();
         game.switchPlayer();
         assertEquals(Hive.Player.BLACK,game.getCurrentPlayer());
     }
 
     @Test
-    public void testWhiteWinsWhenShouldWin() {
+    void testWhiteWinsWhenShouldWin() {
         HiveGame game = HiveGame.getGame();
         PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
-        Board board = Board.getBoardInstance();
 
         Tile blackQueenTile = new Tile();
         blackQueenTile.setCreature(Hive.Tile.QUEEN_BEE);
@@ -50,10 +51,9 @@ class HiveGameTest {
     }
 
     @Test
-    public void testWhiteWinsWhenShouldNotWin() {
+    void testWhiteWinsWhenShouldNotWin() {
         HiveGame game = HiveGame.getGame();
         PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
-        Board board = Board.getBoardInstance();
 
         Tile blackQueenTile = new Tile();
         blackQueenTile.setCreature(Hive.Tile.QUEEN_BEE);
@@ -73,5 +73,41 @@ class HiveGameTest {
         placeHandler.playTileTest(whiteTile.getPlayedByPlayer(),whiteTile,-1,1);
 
         assertFalse(game.isWinner(Hive.Player.WHITE));
+    }
+
+    @Test
+    void testCanPlayTile() {
+        HiveGame game = HiveGame.getGame();
+        try {
+            game.play(Hive.Tile.SPIDER,0,0);
+            assertEquals(Board.getBoardInstance().getTopTileAtPosition(0,0).getCreature(),Hive.Tile.SPIDER);
+        } catch (Hive.IllegalMove ex) {
+            ex.printStackTrace();
+            fail("IllegalMove exception thrown");
+        }
+    }
+
+
+    private void play2Tiles() throws Hive.IllegalMove {
+        HiveGame game = HiveGame.getGame();
+        game.play(Hive.Tile.SPIDER,0,0);
+        game.play(Hive.Tile.SPIDER,-1,0);
+    }
+
+    private void play3Tiles() throws Hive.IllegalMove {
+        HiveGame game = HiveGame.getGame();
+        game.play(Hive.Tile.SPIDER,0,0);
+        game.play(Hive.Tile.SPIDER,-1,0);
+        game.play(Hive.Tile.SPIDER,-2,0);
+    }
+
+    @Test
+    void testBlackCanPlayTileNextToOpponentAfterFirstMove() {
+        assertDoesNotThrow(this::play2Tiles);
+    }
+
+    @Test
+    void testWhiteCanNotPlayTileNextToOpponentAfterTwoMoves() {
+        assertThrows(Hive.IllegalMove.class,this::play3Tiles);
     }
 }

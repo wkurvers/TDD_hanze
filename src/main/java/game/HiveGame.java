@@ -1,6 +1,7 @@
 package game;
 
 import creatures.Tile;
+import handlers.GenericMoveHandler;
 import handlers.PlaceHandler;
 
 import java.util.ArrayList;
@@ -21,6 +22,9 @@ public class HiveGame implements Hive {
 
     public void resetGame() {
         instance = null;
+        PlaceHandler.getPlaceHandler().reset();
+        GenericMoveHandler.getGenericMoveHandler().resetMoveHandler();
+        Board.getBoardInstance().resetBoard();
     }
     private HiveGame() {
         currentPlayer = Player.WHITE;
@@ -29,15 +33,6 @@ public class HiveGame implements Hive {
 
     public Player getCurrentPlayer() {
         return currentPlayer;
-    }
-
-    private void gameLoop() {
-        while(isWinner(Player.BLACK) && isWinner(Player.WHITE)) {
-            //Play game
-
-
-            switchPlayer();
-        }
     }
 
     public void switchPlayer() {
@@ -52,12 +47,16 @@ public class HiveGame implements Hive {
 
     @Override
     public void play(Tile tile, int q, int r) throws IllegalMove {
-
+        creatures.Tile tileToPlace = TileFactory.makeTile(tile,currentPlayer);
+        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        placeHandler.playTile(tileToPlace,q,r);
+        switchPlayer();
     }
 
     @Override
     public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
 
+        switchPlayer();
     }
 
     @Override
@@ -73,7 +72,6 @@ public class HiveGame implements Hive {
             HashMap<String, Integer> queenLocation = placeHandler.getQueenLocation(opponent);
 
             ArrayList<creatures.Tile> neighbours = board.getNeighbours(queenLocation.get("q"),queenLocation.get("r"));
-            System.out.println(neighbours);
             for(creatures.Tile tile: neighbours) {
                 if (tile==null) {
                     return false;

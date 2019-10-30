@@ -44,6 +44,14 @@ public class Board {
         }
     }
 
+    public Tile removeTopTileAtPosition(int q, int r) {
+        try {
+            return gameBoard.get(q).get(r).pop();
+        } catch(NullPointerException|EmptyStackException ex) {
+            return null;
+        }
+    }
+
     public ArrayList<Tile> getNeighbours(int q, int r) {
         ArrayList<Tile> neighboursList = new ArrayList<>();
         Tile topLeftTile = getTopTileAtPosition(q,r-1);

@@ -77,12 +77,11 @@ public class PlaceHandler {
         playerTilesToPlay.put(tile, tileCount);
     }
 
-    private void getGameContext() {
-
-    }
-
-    protected boolean checkCanPlayTile(Hive.Player player, Hive.Tile tile, int q, int r) {
-        return canPlayerPlayTile(player,tile) && checkContactExists(q,r);
+    private boolean checkCanPlayTile(Hive.Player player, Hive.Tile tile, int q, int r) {
+        if (whiteTileCountPlayed + blackTileCountPlayed > 0) {
+            return canPlayerPlayTile(player,tile) && checkLocationEmpty(q,r) && checkContactExists(q,r);
+        }
+        return canPlayerPlayTile(player,tile) && checkLocationEmpty(q,r);
     }
 
     public void playTileTest(Hive.Player player, Tile tile, int q, int r) {
@@ -96,7 +95,8 @@ public class PlaceHandler {
         gameBoard.placeTileAtPosition(q, r, tile);
     }
 
-    public void playTile(Hive.Player player, Tile tile, int q, int r) {
+    public void playTile(Tile tile, int q, int r) throws Hive.IllegalMove {
+        Hive.Player player = tile.getPlayedByPlayer();
         if (checkCanPlayTile(player,tile.getCreature(),q,r)) {
             Board gameBoard = Board.getBoardInstance();
             tile.setPlayedByPlayer(player);
@@ -108,22 +108,16 @@ public class PlaceHandler {
             }
             gameBoard.placeTileAtPosition(q, r, tile);
         } else {
-            System.out.println("EXCEPTION");
+            throw new Hive.IllegalMove("This is an illegal move");
         }
     }
 
-    protected boolean checkTileInStock() {
-        /*
-            A player can only play tiles he hasn't placed yet
-         */
-        return true;
-    }
-
-    protected boolean checkLocationEmpty() {
+    protected boolean checkLocationEmpty(int q, int r) {
         /*
             A tile can only be placed on an empty location
          */
-        return true;
+        Board board = Board.getBoardInstance();
+        return board.getTopTileAtPosition(q,r) == null;
     }
 
     protected boolean checkContactExists(int q, int r) {
@@ -134,7 +128,10 @@ public class PlaceHandler {
         ArrayList<Tile> neighbours = gameBoard.getNeighbours(q, r);
         for (Tile tile : neighbours) {
             if (tile != null) {
-                return isNotOpponent(tile);
+                if (whiteTileCountPlayed > 0 && blackTileCountPlayed > 0) {
+                    return isNotOpponent(tile);
+                }
+                return true;
             }
         }
         return false;
@@ -144,7 +141,6 @@ public class PlaceHandler {
         /*
             A placed tile must not have contact with an opponent
          */
-        System.out.println(HiveGame.getGame().getCurrentPlayer());
         Hive.Player currentPlayer = HiveGame.getGame().getCurrentPlayer();
         return tile.getPlayedByPlayer().equals(currentPlayer);
     }
@@ -235,5 +231,6 @@ public class PlaceHandler {
                 return null;
         }
     }
+
 
 }

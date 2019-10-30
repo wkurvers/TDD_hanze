@@ -33,13 +33,16 @@ class PlaceHandlerTest {
     @Test
     void testCheckIsLocationEmptyWhenEmpty() {
         PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
-        assertTrue(placeHandler.checkLocationEmpty());
+        assertTrue(placeHandler.checkLocationEmpty(0,0));
     }
 
     @Test
     void testCheckIsLocationEmptyWhenNotEmpty() {
         PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
-        assertTrue(placeHandler.checkLocationEmpty());
+        Board gameBoard = Board.getBoardInstance();
+        Tile tileToPlace = new Tile();
+        gameBoard.placeTileAtPosition(0,0,tileToPlace);
+        assertFalse(placeHandler.checkLocationEmpty(0,0));
     }
 
     @Test
