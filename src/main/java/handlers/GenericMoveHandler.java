@@ -7,6 +7,7 @@ import game.Hive;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 public class GenericMoveHandler {
     private static GenericMoveHandler instance;
@@ -105,78 +106,79 @@ public class GenericMoveHandler {
         return false;
     }
 
-    private ArrayList<HashMap<String,Integer>> succesors(HashMap<String,Integer> location) {
-        ArrayList<HashMap<String,Integer>>  succesors = new ArrayList<>();
+    private ArrayList<HashMap<String,Integer>> successors(HashMap<String,Integer> location) {
+        ArrayList<HashMap<String,Integer>>  successors = new ArrayList<>();
         HashMap<String,Integer> topLeft = new HashMap<>();
         topLeft.put("q",location.get("q"));
         topLeft.put("r",location.get("r")-1);
         if (Board.getBoardInstance().getPosition(topLeft.get("q"),topLeft.get("r")) != null) {
-            succesors.add(topLeft);
+            successors.add(topLeft);
         }
 
         HashMap<String,Integer> topRight = new HashMap<>();
         topRight.put("q",location.get("q")+1);
         topRight.put("r",location.get("r")-1);
         if (Board.getBoardInstance().getPosition(topRight.get("q"),topRight.get("r")) != null) {
-            succesors.add(topRight);
+            successors.add(topRight);
         }
 
         HashMap<String,Integer> right = new HashMap<>();
         right.put("q",location.get("q")+1);
         right.put("r",location.get("r"));
         if (Board.getBoardInstance().getPosition(right.get("q"),right.get("r")) != null) {
-            succesors.add(right);
+            successors.add(right);
         }
 
         HashMap<String,Integer> bottomRight = new HashMap<>();
         bottomRight.put("q",location.get("q"));
         bottomRight.put("r",location.get("r")+1);
         if (Board.getBoardInstance().getPosition(bottomRight.get("q"),bottomRight.get("r")) != null) {
-            succesors.add(bottomRight);
+            successors.add(bottomRight);
         }
 
         HashMap<String,Integer> bottomLeft = new HashMap<>();
         bottomLeft.put("q",location.get("q")-1);
         bottomLeft.put("r",location.get("r")+1);
         if (Board.getBoardInstance().getPosition(bottomLeft.get("q"),bottomLeft.get("r")) != null) {
-            succesors.add(bottomLeft);
+            successors.add(bottomLeft);
         }
 
         HashMap<String,Integer> left = new HashMap<>();
         left.put("q",location.get("q")-1);
         left.put("r",location.get("r"));
         if (Board.getBoardInstance().getPosition(left.get("q"),left.get("r")) != null) {
-            succesors.add(left);
+            successors.add(left);
         }
-        return succesors;
+        return successors;
     }
 
     public int getTotalTileCount(Hive.Player playerThatPlayedQueen) {
         Board board = Board.getBoardInstance();
         HashMap<String,Integer> startLocation = PlaceHandler.getPlaceHandler().getQueenLocation(playerThatPlayedQueen);
-        int totalCount = board.getPosition(startLocation.get("q"),startLocation.get("r")).size();
         ArrayList<HashMap<String,Integer>> visited = new ArrayList<>();
-        int total = dfs(startLocation,visited,totalCount);
+        int total = bfs(startLocation,visited);
         return total;
     }
 
-    private int dfs(HashMap<String,Integer> locationNode, ArrayList<HashMap<String,Integer>> visited,int totalCount) {
-        visited.add(locationNode);
-
-        ArrayList<HashMap<String,Integer>> succesors = succesors(locationNode);
-        for(HashMap<String,Integer> locationChild: succesors) {
-            if (!visited.contains(locationChild)) {
-                System.out.println("Not in visited");
-                int subCount = dfs(locationChild,visited,totalCount);
-                System.out.println("Subcount is " + subCount);
-                totalCount += subCount;
-                System.out.println("Totalcount is "+ totalCount);
+    private int bfs(HashMap<String,Integer> locationNode, ArrayList<HashMap<String,Integer>> visited) {
+        Stack<HashMap<String,Integer>> queue = new Stack<>();
+        queue.add(locationNode);
+        int totalCount = 0;
+        while(queue.size() > 0) {
+            locationNode = queue.pop();
+            if (visited.contains(locationNode)) {
+                continue;
             }
-            return Board.getBoardInstance().getPosition(locationNode.get("q"),locationNode.get("r")).size();
+            visited.add(locationNode);
+            totalCount += Board.getBoardInstance().getPosition(locationNode.get("q"),locationNode.get("r")).size();
+            ArrayList<HashMap<String,Integer>> successors = successors(locationNode);
+            for (HashMap<String,Integer> child: successors) {
+                if (!visited.contains(child)) {
+                    queue.add(0,child);
+                }
+            }
         }
-
         return totalCount;
-
     }
 
     //------------------------------------------------- TEST METHODS
