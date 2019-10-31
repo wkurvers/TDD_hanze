@@ -95,6 +95,15 @@ public class PlaceHandler {
         gameBoard.placeTileAtPosition(q, r, tile);
     }
 
+    public void naivePlayTile(Tile tile, int q, int r){
+        Hive.Player player = tile.getPlayedByPlayer();
+        Board gameBoard = Board.getBoardInstance();
+        if(tile.getCreature() == Hive.Tile.QUEEN_BEE) {
+            updateHasPlayedQueen(player, q,r);
+        }
+        gameBoard.placeTileAtPosition(q, r, tile);
+    }
+
     public void playTile(Tile tile, int q, int r) throws Hive.IllegalMove {
         Hive.Player player = tile.getPlayedByPlayer();
         if (checkCanPlayTile(player,tile.getCreature(),q,r)) {

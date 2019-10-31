@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="handlers.GenericMoveHandlerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-10-31T09:16:58" hostname="jelmer-Aspire-V5-591G" time="0.022">
+<testsuite name="handlers.GenericMoveHandlerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-10-31T13:22:01" hostname="jelmer-Aspire-V5-591G" time="0.026">
   <properties/>
-  <testcase name="testDfsTileCountSearch()" classname="handlers.GenericMoveHandlerTest" time="0.022"/>
+  <testcase name="testSlideWhenKeepContact()" classname="handlers.GenericMoveHandlerTest" time="0.026"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

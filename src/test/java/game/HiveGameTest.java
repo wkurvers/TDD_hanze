@@ -1,5 +1,6 @@
 package game;
 
+import creatures.QueenBee;
 import creatures.Tile;
 import handlers.PlaceHandler;
 import org.junit.jupiter.api.AfterEach;
@@ -109,5 +110,36 @@ class HiveGameTest {
     @Test
     void testWhiteCanNotPlayTileNextToOpponentAfterTwoMoves() {
         assertThrows(Hive.IllegalMove.class,this::play3Tiles);
+    }
+
+    private void moveTile() throws Hive.IllegalMove {
+        HiveGame game = HiveGame.getGame();
+        game.play(Hive.Tile.QUEEN_BEE,0,0); //WHITE
+        game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
+        game.play(Hive.Tile.SOLDIER_ANT,1,-1); //WHITE
+        game.play(Hive.Tile.SOLDIER_ANT,-1,-1); //BLACK
+        game.play(Hive.Tile.SOLDIER_ANT,1,0); //WHITE
+
+        game.move(-1,-1,-2,0); //BLACK
+    }
+
+    private void moveInvalidTile() throws Hive.IllegalMove {
+        HiveGame game = HiveGame.getGame();
+        game.play(Hive.Tile.QUEEN_BEE,0,0); //WHITE
+        game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
+        game.play(Hive.Tile.SOLDIER_ANT,1,-1); //WHITE
+        game.play(Hive.Tile.SOLDIER_ANT,-1,-1); //BLACK
+        game.play(Hive.Tile.SOLDIER_ANT,1,0); //WHITE
+
+        game.move(-1,0,-2,0); //BLACK
+    }
+    @Test
+    void testBlackCanMoveWhenValidMove() {
+        assertDoesNotThrow(this::moveTile);
+    }
+
+    @Test
+    void testBlackCannotMoveWhenInvalidMove() {
+        assertThrows(Hive.IllegalMove.class,this::moveInvalidTile);
     }
 }

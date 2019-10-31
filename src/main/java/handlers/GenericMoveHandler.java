@@ -6,6 +6,7 @@ import game.Board;
 import game.Hive;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Stack;
 
@@ -29,28 +30,7 @@ public class GenericMoveHandler {
 
     }
 
-    protected boolean validateQueenBee() {
-        /*
-        Tiles can only be moved ones the queen bee of that player has been placed
-         */
-        return true;
-    }
-
-    protected boolean validateContact() {
-        /*
-        Tiles can only be moved if after the move they're still in contact with atleast one other tile
-         */
-        return true;
-    }
-
-    protected boolean validateNoIslands() {
-        /*
-        If a move results into 2 or more seperate 'islands' of tiles it is invalid
-         */
-        return true;
-    }
-
-    protected boolean valideCreatureSpecific(Tile tileToMove, int fromQ, int fromR, int toQ, int toR) throws Exception {
+    protected boolean validCreatureSpecific(Tile tileToMove, int fromQ, int fromR, int toQ, int toR) throws Exception {
         /*
         Each creature has its own moving constraints
          */
@@ -77,11 +57,8 @@ public class GenericMoveHandler {
         return creatureMoveHandler.isValidMove(fromQ, fromR, toQ, toR);
     }
 
-    public boolean canMakeMove(Tile tileToMove, int fromQ, int fromR, int toQ, int toR) {
-        return true;
-    }
-
     public void moveTile(int fromQ, int fromR, int toQ, int toR, Hive.Player player) throws Hive.IllegalMove {
+        int tileCountBefore = getTotalTileCount(player);
         Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
         if (tile == null) {
             throw new Hive.IllegalMove("There is no tile to move");
@@ -89,10 +66,87 @@ public class GenericMoveHandler {
         if (tile.getPlayedByPlayer() != player) {
             throw new Hive.IllegalMove("This tile does not belong to this player");
         }
-        if (PlaceHandler.getPlaceHandler().checkHasPlayedQueen(player)) {
+        if (!PlaceHandler.getPlaceHandler().checkHasPlayedQueen(player)) {
             throw new Hive.IllegalMove("This player's queen has not been played yet");
         }
-        Board.getBoardInstance().placeTileAtPosition(toQ,toR,tile);
+        if (!checkContactExists(toQ,toR)) {
+            throw new Hive.IllegalMove("This move results in the tile having no contact");
+        }
+        try {
+            if (!validCreatureSpecific(tile,fromQ,fromR,toQ,toR)) {
+                throw new Hive.IllegalMove("This creature cannot make this move");
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        PlaceHandler.getPlaceHandler().naivePlayTile(tile,toQ,toR);
+        int tileCountAfter = getTotalTileCount(player);
+        if (tileCountBefore != tileCountAfter) {
+            Tile revertTile = Board.getBoardInstance().removeTopTileAtPosition(toQ,toR);
+            PlaceHandler.getPlaceHandler().naivePlayTile(revertTile,fromQ,fromR);
+            throw new Hive.IllegalMove("This move results in at least 2 separate islands");
+        }
+    }
+
+    private boolean canMove(int fromQ, int fromR, int toQ, int toR, Hive.Player player) {
+        int tileCountBefore = getTotalTileCount(player);
+        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
+        if( tile == null ||
+            tile.getPlayedByPlayer() != player ||
+            !PlaceHandler.getPlaceHandler().checkHasPlayedQueen(player)||
+            !checkContactExists(toQ,toR)
+        ) {
+            return false;
+        }
+        try {
+            if (!validCreatureSpecific(tile,fromQ,fromR,toQ,toR)) {
+                return false;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        PlaceHandler.getPlaceHandler().naivePlayTile(tile,toQ,toR);
+        int tileCountAfter = getTotalTileCount(player);
+        if (tileCountBefore != tileCountAfter) {
+            Tile revertTile = Board.getBoardInstance().removeTopTileAtPosition(toQ, toR);
+            PlaceHandler.getPlaceHandler().naivePlayTile(revertTile, fromQ, fromR);
+            return false;
+        }
+        return true;
+    }
+
+    public void slideTile(int fromQ, int fromR, int toQ, int toR, Hive.Player player) throws Hive.IllegalMove {
+        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
+        if (Math.abs(Math.abs(fromQ)-Math.abs(toQ)) <= 1 && Math.abs(Math.abs(fromR)-Math.abs(toR)) <= 1) { //Check if move is only 1 slide
+            if (canMove(fromQ, fromR, toQ, toR, player)) {
+                ArrayList<Stack<Tile>> neighboursA = Board.getBoardInstance().getNeighbouringPositions(fromQ, fromR);
+                ArrayList<Stack<Tile>> neighboursB = Board.getBoardInstance().getNeighbouringPositions(toQ, toR);
+                neighboursA.retainAll(neighboursB);
+                if (neighboursA.size() == 2) {
+                    PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
+                    Stack<Tile> n1 = neighboursA.get(0);
+                    Stack<Tile> n2 = neighboursA.get(1);
+                    Stack<Tile> a = Board.getBoardInstance().getPosition(fromQ, fromR);
+                    Board.getBoardInstance().peekAtPosition(toQ, toR);
+                    Stack<Tile> b = Board.getBoardInstance().getPosition(toQ, toR);
+                    if (Math.min(n1.size(), n2.size()) > Math.max(a.size(), b.size())) {
+                        //no slide
+                        throw new Hive.IllegalMove("This slide is blocked");
+                    }
+                } else if (neighboursA.size() != 1) {
+                    throw new Hive.IllegalMove("This slide does not keep contact");
+                }
+                //slide tile
+                PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
+                moveTile(fromQ, fromR, toQ, toR, player);
+            }
+        } else {
+            throw new Hive.IllegalMove("Slide move is bigger then one");
+        }
+    }
+
+    public boolean testSlideDifference(int fromQ, int fromR, int toQ, int toR) {
+        return Math.abs(Math.abs(fromQ)-Math.abs(toQ)) <= 1 && Math.abs(Math.abs(fromR)-Math.abs(toR)) <= 1;
     }
 
     private boolean checkContactExists(int q, int r) {
@@ -174,7 +228,7 @@ public class GenericMoveHandler {
             ArrayList<HashMap<String,Integer>> successors = successors(locationNode);
             for (HashMap<String,Integer> child: successors) {
                 if (!visited.contains(child)) {
-                    queue.add(0,child);
+                    queue.add(child);
                 }
             }
         }
@@ -217,6 +271,33 @@ public class GenericMoveHandler {
 
     public void moveTileTest(int fromQ, int fromR, int toQ, int toR) {
         Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
-        Board.getBoardInstance().placeTileAtPosition(toQ,toR,tile);
+        PlaceHandler.getPlaceHandler().naivePlayTile(tile,toQ,toR);
+    }
+
+    public boolean testSlideDirection(int fromQ, int fromR, int toQ, int toR) {
+        ArrayList<Stack<Tile>> neighboursA = Board.getBoardInstance().getNeighbouringPositions(fromQ, fromR);
+        ArrayList<Stack<Tile>> neighboursB = Board.getBoardInstance().getNeighbouringPositions(toQ, toR);
+        neighboursA.removeIf(e -> e.size() == 0);
+        neighboursB.removeIf(e -> e.size() == 0);
+        neighboursA.retainAll(neighboursB);
+        if (neighboursA.size() == 2) {
+            Stack<Tile> n1 = neighboursA.get(0);
+            Stack<Tile> n2 = neighboursA.get(1);
+            Stack<Tile> a = Board.getBoardInstance().getPosition(fromQ, fromR);
+            Board.getBoardInstance().peekAtPosition(toQ, toR);
+            Stack<Tile> b = Board.getBoardInstance().getPosition(toQ, toR);
+            return Math.min(n1.size(), n2.size()) <= Math.max(a.size(), b.size());
+        }
+        return true;
+    }
+
+    public boolean testSlideContact(int fromQ, int fromR, int toQ, int toR) {
+        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
+        ArrayList<Stack<Tile>> neighboursA = Board.getBoardInstance().getNeighbouringPositions(fromQ, fromR);
+        ArrayList<Stack<Tile>> neighboursB = Board.getBoardInstance().getNeighbouringPositions(toQ, toR);
+        neighboursA.removeIf(e -> e.size() == 0);
+        neighboursB.removeIf(e -> e.size() == 0);
+        neighboursA.retainAll(neighboursB);
+        return neighboursA.size() == 1;
     }
 }

@@ -55,7 +55,8 @@ public class HiveGame implements Hive {
 
     @Override
     public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
-
+        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
+        genericMoveHandler.moveTile(fromQ,fromR,toQ,toR,currentPlayer);
         switchPlayer();
     }
 

@@ -36,6 +36,14 @@ public class Board {
         }
     }
 
+    public int getStackSizeAtPosition(int q, int r) {
+        try {
+            return gameBoard.get(q).get(r).size();
+        } catch (NullPointerException ex) {
+            return 0;
+        }
+    }
+
     public Tile getTopTileAtPosition(int q, int r) {
         try {
             return gameBoard.get(q).get(r).peek();
@@ -46,7 +54,11 @@ public class Board {
 
     public Tile removeTopTileAtPosition(int q, int r) {
         try {
-            return gameBoard.get(q).get(r).pop();
+            Tile tile = gameBoard.get(q).get(r).pop();
+            if (gameBoard.get(q).get(r).isEmpty()) {
+                gameBoard.get(q).put(r,null);
+            }
+            return tile;
         } catch(NullPointerException|EmptyStackException ex) {
             return null;
         }
@@ -75,13 +87,45 @@ public class Board {
         return neighboursList;
     }
 
-    public void placeTileAtPosition(int q, int r, Tile tile){
+    public ArrayList<Stack<Tile>> getNeighbouringPositions(int q, int r) {
+        ArrayList<Stack<Tile>> neighboursList = new ArrayList<>();
+        peekAtPosition(q,r-1);
+        Stack<Tile> topLeft = gameBoard.get(q).get(r-1);
+        neighboursList.add(topLeft);
+
+        peekAtPosition(q+1,r-1);
+        Stack<Tile> topRight = gameBoard.get(q+1).get(r-1);
+        neighboursList.add(topRight);
+
+        peekAtPosition(q+1,r);
+        Stack<Tile> right = gameBoard.get(q+1).get(r);
+        neighboursList.add(right);
+
+        peekAtPosition(q,r+1);
+        Stack<Tile> bottomRight = gameBoard.get(q).get(r+1);
+        neighboursList.add(bottomRight);
+
+        peekAtPosition(q-1,r+1);
+        Stack<Tile> bottomLeft = gameBoard.get(q-1).get(r+1);
+        neighboursList.add(bottomLeft);
+
+        peekAtPosition(q-1,r);
+        Stack<Tile> left = gameBoard.get(q-1).get(r);
+        neighboursList.add(left);
+        return neighboursList;
+    }
+
+    public void peekAtPosition(int q, int r) {
         if (gameBoard.get(q) == null) {
             gameBoard.put(q,new HashMap<Integer, Stack<Tile>>());
             gameBoard.get(q).put(r, new Stack<Tile>());
         } else if (gameBoard.get(q).get(r) == null) {
             gameBoard.get(q).put(r, new Stack<Tile>());
         }
+    }
+
+    public void placeTileAtPosition(int q, int r, Tile tile){
+        peekAtPosition(q,r);
         gameBoard.get(q).get(r).push(tile);
     }
 }
