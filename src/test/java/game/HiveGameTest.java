@@ -88,58 +88,98 @@ class HiveGameTest {
         }
     }
 
-
-    private void play2Tiles() throws Hive.IllegalMove {
-        HiveGame game = HiveGame.getGame();
-        game.play(Hive.Tile.SPIDER,0,0);
-        game.play(Hive.Tile.SPIDER,-1,0);
-    }
-
-    private void play3Tiles() throws Hive.IllegalMove {
-        HiveGame game = HiveGame.getGame();
-        game.play(Hive.Tile.SPIDER,0,0);
-        game.play(Hive.Tile.SPIDER,-1,0);
-        game.play(Hive.Tile.SPIDER,-2,0);
-    }
-
     @Test
     void testBlackCanPlayTileNextToOpponentAfterFirstMove() {
-        assertDoesNotThrow(this::play2Tiles);
+        assertDoesNotThrow(() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.SPIDER,0,0);
+            game.play(Hive.Tile.SPIDER,-1,0);
+        });
     }
 
     @Test
     void testWhiteCanNotPlayTileNextToOpponentAfterTwoMoves() {
-        assertThrows(Hive.IllegalMove.class,this::play3Tiles);
+        assertThrows(Hive.IllegalMove.class,() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.SPIDER,0,0);
+            game.play(Hive.Tile.SPIDER,-1,0);
+            game.play(Hive.Tile.SPIDER,-2,0);
+        });
     }
 
-    private void moveTile() throws Hive.IllegalMove {
-        HiveGame game = HiveGame.getGame();
-        game.play(Hive.Tile.QUEEN_BEE,0,0); //WHITE
-        game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
-        game.play(Hive.Tile.SOLDIER_ANT,1,-1); //WHITE
-        game.play(Hive.Tile.SOLDIER_ANT,-1,-1); //BLACK
-        game.play(Hive.Tile.SOLDIER_ANT,1,0); //WHITE
-
-        game.move(-1,-1,-2,0); //BLACK
-    }
-
-    private void moveInvalidTile() throws Hive.IllegalMove {
-        HiveGame game = HiveGame.getGame();
-        game.play(Hive.Tile.QUEEN_BEE,0,0); //WHITE
-        game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
-        game.play(Hive.Tile.SOLDIER_ANT,1,-1); //WHITE
-        game.play(Hive.Tile.SOLDIER_ANT,-1,-1); //BLACK
-        game.play(Hive.Tile.SOLDIER_ANT,1,0); //WHITE
-
-        game.move(-1,0,-2,0); //BLACK
-    }
     @Test
     void testBlackCanMoveWhenValidMove() {
-        assertDoesNotThrow(this::moveTile);
+        assertDoesNotThrow(() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.QUEEN_BEE,0,0); //WHITE
+            game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
+            game.play(Hive.Tile.SOLDIER_ANT,1,-1); //WHITE
+            game.play(Hive.Tile.SOLDIER_ANT,-1,-1); //BLACK
+            game.play(Hive.Tile.SOLDIER_ANT,1,0); //WHITE
+
+            game.move(-1,-1,-2,0); //BLACK
+        });
     }
 
     @Test
     void testBlackCannotMoveWhenInvalidMove() {
-        assertThrows(Hive.IllegalMove.class,this::moveInvalidTile);
+        assertThrows(Hive.IllegalMove.class,() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.QUEEN_BEE,0,0); //WHITE
+            game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
+            game.play(Hive.Tile.SOLDIER_ANT,1,-1); //WHITE
+            game.play(Hive.Tile.SOLDIER_ANT,-1,-1); //BLACK
+            game.play(Hive.Tile.SOLDIER_ANT,1,0); //WHITE
+
+            game.move(-1,0,-2,0); //BLACK
+        });
+    }
+
+    @Test
+    void testValidBeetleSlide() {
+        assertDoesNotThrow(() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.QUEEN_BEE,0,0); //WHITE
+            game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
+            game.play(Hive.Tile.BEETLE,1,-1); //WHITE
+            game.play(Hive.Tile.BEETLE,-2,0); //BLACK
+            game.move(1,-1,1,0); //WHITE
+        });
+    }
+
+    @Test
+    void testInvalidBeetleSlide() {
+        assertThrows(Hive.IllegalMove.class, () -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.QUEEN_BEE,0,0); //WHITE
+            game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
+            game.play(Hive.Tile.BEETLE,1,-1); //WHITE
+            game.play(Hive.Tile.BEETLE,-2,0); //BLACK
+            game.move(1,-1,2,0); //WHITE
+        });
+    }
+
+    @Test
+    void testValidQueenSlide() {
+        assertDoesNotThrow(() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.BEETLE,0,0); //WHITE
+            game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
+            game.play(Hive.Tile.QUEEN_BEE,0,1); //WHITE
+            game.play(Hive.Tile.BEETLE,-1,-1); //BLACK
+            game.move(0,1,-1,1); //WHITE
+        });
+    }
+
+    @Test
+    void testInvalidQueenSlide() {
+        assertThrows(Hive.IllegalMove.class,() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.BEETLE,0,0); //WHITE
+            game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
+            game.play(Hive.Tile.QUEEN_BEE,0,1); //WHITE
+            game.play(Hive.Tile.BEETLE,-1,-1); //BLACK
+            game.move(0,1,0,0); //WHITE
+        });
     }
 }

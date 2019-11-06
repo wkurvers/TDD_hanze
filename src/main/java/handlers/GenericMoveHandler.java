@@ -30,7 +30,7 @@ public class GenericMoveHandler {
 
     }
 
-    protected boolean validCreatureSpecific(Tile tileToMove, int fromQ, int fromR, int toQ, int toR) throws Exception {
+    protected boolean validCreatureSpecific(Tile tileToMove, int fromQ, int fromR, int toQ, int toR) throws Hive.IllegalMove {
         /*
         Each creature has its own moving constraints
          */
@@ -52,7 +52,7 @@ public class GenericMoveHandler {
                 creatureMoveHandler = BeetleMoveHandler.getInstance();
                 break;
             default:
-                throw new Exception("No valid creature was specified");
+                throw new Hive.IllegalMove("No valid creature was specified");
         }
         return creatureMoveHandler.isValidMove(fromQ, fromR, toQ, toR);
     }
@@ -72,12 +72,8 @@ public class GenericMoveHandler {
         if (!checkContactExists(toQ,toR)) {
             throw new Hive.IllegalMove("This move results in the tile having no contact");
         }
-        try {
-            if (!validCreatureSpecific(tile,fromQ,fromR,toQ,toR)) {
-                throw new Hive.IllegalMove("This creature cannot make this move");
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        if (!validCreatureSpecific(tile,fromQ,fromR,toQ,toR)) {
+            throw new Hive.IllegalMove("This creature cannot make this move");
         }
         PlaceHandler.getPlaceHandler().naivePlayTile(tile,toQ,toR);
         int tileCountAfter = getTotalTileCount(player);
@@ -88,66 +84,53 @@ public class GenericMoveHandler {
         }
     }
 
-    private boolean canMove(int fromQ, int fromR, int toQ, int toR, Hive.Player player) {
-        int tileCountBefore = getTotalTileCount(player);
-        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
-        if( tile == null ||
-            tile.getPlayedByPlayer() != player ||
-            !PlaceHandler.getPlaceHandler().checkHasPlayedQueen(player)||
-            !checkContactExists(toQ,toR)
-        ) {
-            return false;
-        }
-        try {
-            if (!validCreatureSpecific(tile,fromQ,fromR,toQ,toR)) {
-                return false;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-        PlaceHandler.getPlaceHandler().naivePlayTile(tile,toQ,toR);
-        int tileCountAfter = getTotalTileCount(player);
-        if (tileCountBefore != tileCountAfter) {
-            Tile revertTile = Board.getBoardInstance().removeTopTileAtPosition(toQ, toR);
-            PlaceHandler.getPlaceHandler().naivePlayTile(revertTile, fromQ, fromR);
-            return false;
-        }
-        return true;
-    }
-
     public void slideTile(int fromQ, int fromR, int toQ, int toR, Hive.Player player) throws Hive.IllegalMove {
         Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
-        if (Math.abs(Math.abs(fromQ)-Math.abs(toQ)) <= 1 && Math.abs(Math.abs(fromR)-Math.abs(toR)) <= 1) { //Check if move is only 1 slide
-            if (canMove(fromQ, fromR, toQ, toR, player)) {
-                ArrayList<Integer[]> neighboursA = (ArrayList) Board.getBoardInstance().getNeighbouringCoordinates(fromQ, fromR).values();
-                ArrayList<Integer[]> neighboursB = (ArrayList) Board.getBoardInstance().getNeighbouringCoordinates(toQ, toR).values();
-                neighboursA.retainAll(neighboursB);
-                if (neighboursA.size() == 2) {
-                    PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
-                    int n1 = Board.getBoardInstance().getSizeAtPosition(neighboursA.get(0)[0], neighboursA.get(0)[1]);
-                    int n2 = Board.getBoardInstance().getSizeAtPosition(neighboursA.get(1)[0],neighboursA.get(1)[1]);
-                    int a = Board.getBoardInstance().getSizeAtPosition(fromQ,fromR);
-                    int b = Board.getBoardInstance().getSizeAtPosition(toQ,toR);
-                    if (Math.min(n1, n2) > Math.max(a, b)) {
-                        PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
-                        throw new Hive.IllegalMove("This slide is blocked");
-                    }
-                } else if (neighboursA.size() != 1) {
-                    PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
-                    throw new Hive.IllegalMove("This slide does not keep contact");
-                }
-                //slide tile
-                PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
-                moveTile(fromQ, fromR, toQ, toR, player);
-            }
-        } else {
+        if (!checkSlideDistanceIsOne(fromQ,fromR,toQ,toR)) {
             PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
             throw new Hive.IllegalMove("Slide move is bigger then one");
         }
+        if (!checkCommonNeighboursSize(fromQ, fromR, toQ, toR)) {
+            PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
+            throw new Hive.IllegalMove("This slide is blocked");
+        }
+        if (!checkWhileSlidingKeepContact(fromQ, fromR, toQ, toR)) {
+            PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
+            throw new Hive.IllegalMove("This slide does not keep contact");
+        }
+        PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
+        moveTile(fromQ, fromR, toQ, toR, player);
     }
 
-    public boolean testSlideDifference(int fromQ, int fromR, int toQ, int toR) {
+    public boolean checkSlideDistanceIsOne(int fromQ, int fromR, int toQ, int toR) {
         return Math.abs(Math.abs(fromQ)-Math.abs(toQ)) <= 1 && Math.abs(Math.abs(fromR)-Math.abs(toR)) <= 1;
+        //2 - (-1) = 3
+        //-2 - (-2) = 0
+        //3 + 0 = 3
+
+        //-3 - (-2) = -1
+        //0 - (2) = -2
+        // -1 + (-2) = -3 = 3
+
+        //0 - 2 = -2
+        //0 - 0 = 0
+        //-2 + 0 = -2 = 2
+
+        //0 - 2 = -2
+        //0 - (-2) = 2
+        // -2 + 2 = 0
+        //------
+        //min(0,0) = 0
+        //max(3,-3) = 3
+        //abs(0-3) = 3
+
+        //min(0,0) = 0
+        //max(3,0) = 3
+        //abs(0-3) = 3
+
+        //min(0,0) = 0
+        //max(-3,2) = 2
+        //abs(0-2) = 2
     }
 
     private boolean checkContactExists(int q, int r) {
@@ -159,6 +142,28 @@ public class GenericMoveHandler {
             }
         }
         return false;
+    }
+
+    public boolean checkCommonNeighboursSize(int fromQ, int fromR, int toQ, int toR) {
+        ArrayList<Integer[]> commonNeighbours = Board.getBoardInstance().getCommonNeighbours(fromQ,fromR, toQ, toR);
+        if (commonNeighbours.size() == 2) {
+            int n1 = Board.getBoardInstance().getSizeAtPosition(commonNeighbours.get(0)[0], commonNeighbours.get(0)[1]);
+            int n2 = Board.getBoardInstance().getSizeAtPosition(commonNeighbours.get(1)[0], commonNeighbours.get(1)[1]);
+            int a = Board.getBoardInstance().getSizeAtPosition(fromQ, fromR);
+            int b = Board.getBoardInstance().getSizeAtPosition(toQ, toR);
+            return Math.min(n1, n2) <= Math.max(a, b);
+        }
+        return true;
+    }
+
+    public boolean checkWhileSlidingKeepContact(int fromQ, int fromR, int toQ, int toR) {
+        if(Board.getBoardInstance().getSizeAtPosition(toQ,toR) > 0) {
+            return true;
+        }
+        ArrayList<Integer[]> commonNeighbours = Board.getBoardInstance().getCommonNeighbours(fromQ,fromR, toQ, toR);
+
+        commonNeighbours.removeIf(location -> Board.getBoardInstance().getSizeAtPosition(location[0],location[1]) == 0);
+        return commonNeighbours.size() >= 1;
     }
 
     private ArrayList<HashMap<String,Integer>> successors(HashMap<String,Integer> location) {
@@ -273,25 +278,5 @@ public class GenericMoveHandler {
     public void moveTileTest(int fromQ, int fromR, int toQ, int toR) {
         Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
         PlaceHandler.getPlaceHandler().naivePlayTile(tile,toQ,toR);
-    }
-
-    public boolean checkCommonNeighboursSize(int fromQ, int fromR, int toQ, int toR) {
-        ArrayList<Integer[]> commonNeighbours = Board.getBoardInstance().getCommonNeighbours(fromQ,fromR, toQ, toR);
-        if (commonNeighbours.size() == 2) {
-            int n1 = Board.getBoardInstance().getSizeAtPosition(commonNeighbours.get(0)[0], commonNeighbours.get(0)[1]);
-            int n2 = Board.getBoardInstance().getSizeAtPosition(commonNeighbours.get(1)[0], commonNeighbours.get(1)[1]);
-            int a = Board.getBoardInstance().getSizeAtPosition(fromQ, fromR);
-            int b = Board.getBoardInstance().getSizeAtPosition(toQ, toR);
-            return Math.min(n1, n2) <= Math.max(a, b);
-        }
-        return true;
-    }
-
-    public boolean checkWhileSlidingKeepContact(int fromQ, int fromR, int toQ, int toR) {
-        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
-        ArrayList<Integer[]> commonNeighbours = Board.getBoardInstance().getCommonNeighbours(fromQ,fromR, toQ, toR);
-
-        commonNeighbours.removeIf(location -> Board.getBoardInstance().getSizeAtPosition(location[0],location[1]) == 0);
-        return commonNeighbours.size() >= 1;
     }
 }

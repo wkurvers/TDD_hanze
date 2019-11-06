@@ -169,12 +169,12 @@ public class GenericMoveHandlerTest {
 
     @Test
     void testSlideIsOneMove() {
-        assertTrue(GenericMoveHandler.getGenericMoveHandler().testSlideDifference(0,2,-1,2));
+        assertTrue(GenericMoveHandler.getGenericMoveHandler().checkSlideDistanceIsOne(0,2,-1,2));
     }
 
     @Test
     void testSlideIsBiggerThenOneMove() {
-        assertFalse(GenericMoveHandler.getGenericMoveHandler().testSlideDifference(0,2,-2,2));
+        assertFalse(GenericMoveHandler.getGenericMoveHandler().checkSlideDistanceIsOne(0,2,-2,2));
     }
 
     @Test
@@ -225,7 +225,7 @@ public class GenericMoveHandlerTest {
         placeHandler.playTileTest(Hive.Player.WHITE,tile,0,1);
         placeHandler.playTileTest(Hive.Player.WHITE,tile,-2,1);
         placeHandler.playTileTest(Hive.Player.WHITE,tile,-2,2);
-
+        Tile tile2 = Board.getBoardInstance().removeTopTileAtPosition(-2,2);
         assertFalse(genericMoveHandler.checkWhileSlidingKeepContact(-2,2,-1,2));
     }
 
@@ -264,7 +264,7 @@ public class GenericMoveHandlerTest {
         placeHandler.playTileTest(Hive.Player.WHITE,tile4,-1,1);
         placeHandler.playTileTest(Hive.Player.WHITE,tile5,-2,1);
         placeHandler.playTileTest(Hive.Player.WHITE,tile6,-2,2);
-
+        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(-2,2);
         assertTrue(genericMoveHandler.checkWhileSlidingKeepContact(-2,2,-1,2));
     }
 }

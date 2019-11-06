@@ -56,7 +56,27 @@ public class HiveGame implements Hive {
     @Override
     public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
         GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        genericMoveHandler.moveTile(fromQ,fromR,toQ,toR,currentPlayer);
+        creatures.Tile tileToMove = Board.getBoardInstance().getTopTileAtPosition(fromQ,fromR);
+        switch (tileToMove.getCreature()) {
+            case BEETLE:
+                genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
+                break;
+            case QUEEN_BEE:
+                genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
+                //TO DO find route
+                break;
+            case SOLDIER_ANT:
+                genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
+                //TO DO find route
+                break;
+            case SPIDER:
+                genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
+                //TO DO find route
+                break;
+            case GRASSHOPPER:
+                genericMoveHandler.moveTile(fromQ,fromR,toQ,toR,currentPlayer);
+                break;
+        }
         switchPlayer();
     }
 
