@@ -2,10 +2,7 @@ package game;
 
 import creatures.Tile;
 
-import java.util.ArrayList;
-import java.util.EmptyStackException;
-import java.util.HashMap;
-import java.util.Stack;
+import java.util.*;
 
 public class Board {
     private HashMap<Integer, HashMap<Integer, Stack<Tile>>> gameBoard = new HashMap<>();
@@ -36,7 +33,7 @@ public class Board {
         }
     }
 
-    public int getStackSizeAtPosition(int q, int r) {
+    public int getSizeAtPosition(int q, int r) {
         try {
             return gameBoard.get(q).get(r).size();
         } catch (NullPointerException ex) {
@@ -64,58 +61,91 @@ public class Board {
         }
     }
 
+    public HashMap<String, int[]> getNeighbouringCoordinates(int q, int r) {
+        HashMap<String, int[]> coordinates = new HashMap<>();
+        int[] coordinate = new int[2];
+        coordinate[0] = q;
+        coordinate[1] = r-1;
+        coordinates.put("topLeft", coordinate);
+
+        coordinate = new int[2];
+        coordinate[0] = q+1;
+        coordinate[1] = r-1;
+        coordinates.put("topRight",coordinate);
+
+        coordinate = new int[2];
+        coordinate[0] = q+1;
+        coordinate[1] = r;
+        coordinates.put("right",coordinate);
+
+        coordinate = new int[2];
+        coordinate[0] = q;
+        coordinate[1] = r+1;
+        coordinates.put("bottomRight",coordinate);
+
+        coordinate = new int[2];
+        coordinate[0] = q-1;
+        coordinate[1] = r+1;
+        coordinates.put("bottomLeft", coordinate);
+
+        coordinate = new int[2];
+        coordinate[0] = q-1;
+        coordinate[1] = r;
+        coordinates.put("left",coordinate);
+        return coordinates;
+    }
+
     public ArrayList<Tile> getNeighbours(int q, int r) {
+        HashMap<String, int[]> coordinates = getNeighbouringCoordinates(q,r);
         ArrayList<Tile> neighboursList = new ArrayList<>();
-        Tile topLeftTile = getTopTileAtPosition(q,r-1);
+
+        Tile topLeftTile = getTopTileAtPosition(coordinates.get("topLeft")[0],coordinates.get("topLeft")[1]);
         neighboursList.add(topLeftTile);
 
-        Tile topRightTile = getTopTileAtPosition(q+1,r-1);
+        Tile topRightTile = getTopTileAtPosition(coordinates.get("topRight")[0],coordinates.get("topRight")[1]);
         neighboursList.add(topRightTile);
 
-        Tile rightTile = getTopTileAtPosition(q+1,r);
+        Tile rightTile = getTopTileAtPosition(coordinates.get("right")[0],coordinates.get("right")[1]);
         neighboursList.add(rightTile);
 
-        Tile bottomRightTile = getTopTileAtPosition(q,r+1);
+        Tile bottomRightTile = getTopTileAtPosition(coordinates.get("bottomRight")[0],coordinates.get("bottomRight")[1]);
         neighboursList.add(bottomRightTile);
 
-        Tile bottomLeftTile = getTopTileAtPosition(q-1,r+1);
+        Tile bottomLeftTile = getTopTileAtPosition(coordinates.get("bottomLeft")[0],coordinates.get("bottomLeft")[1]);
         neighboursList.add(bottomLeftTile);
 
-        Tile leftTile = getTopTileAtPosition(q-1,r);
+        Tile leftTile = getTopTileAtPosition(coordinates.get("left")[0],coordinates.get("left")[1]);
         neighboursList.add(leftTile);
 
         return neighboursList;
     }
 
-    public ArrayList<Stack<Tile>> getNeighbouringPositions(int q, int r) {
-        ArrayList<Stack<Tile>> neighboursList = new ArrayList<>();
-        peekAtPosition(q,r-1);
-        Stack<Tile> topLeft = gameBoard.get(q).get(r-1);
-        neighboursList.add(topLeft);
+    public ArrayList<Integer> getNeighbouringPositionsSize(int q, int r) {
+        HashMap<String, int[]> coordinates = getNeighbouringCoordinates(q,r);
+        ArrayList<Integer> neighboursSizeList = new ArrayList<>();
 
-        peekAtPosition(q+1,r-1);
-        Stack<Tile> topRight = gameBoard.get(q+1).get(r-1);
-        neighboursList.add(topRight);
+        neighboursSizeList.add(getSizeAtPosition(coordinates.get("topLeft")[0],coordinates.get("topLeft")[1]));
 
-        peekAtPosition(q+1,r);
-        Stack<Tile> right = gameBoard.get(q+1).get(r);
-        neighboursList.add(right);
+        neighboursSizeList.add(getSizeAtPosition(coordinates.get("topRight")[0],coordinates.get("topRight")[1]));
 
-        peekAtPosition(q,r+1);
-        Stack<Tile> bottomRight = gameBoard.get(q).get(r+1);
-        neighboursList.add(bottomRight);
+        neighboursSizeList.add(getSizeAtPosition(coordinates.get("right")[0],coordinates.get("right")[1]));
 
-        peekAtPosition(q-1,r+1);
-        Stack<Tile> bottomLeft = gameBoard.get(q-1).get(r+1);
-        neighboursList.add(bottomLeft);
+        neighboursSizeList.add(getSizeAtPosition(coordinates.get("bottomRight")[0],coordinates.get("bottomRight")[1]));
 
-        peekAtPosition(q-1,r);
-        Stack<Tile> left = gameBoard.get(q-1).get(r);
-        neighboursList.add(left);
-        return neighboursList;
+        neighboursSizeList.add(getSizeAtPosition(coordinates.get("bottomLeft")[0],coordinates.get("bottomLeft")[1]));
+
+        neighboursSizeList.add(getSizeAtPosition(coordinates.get("left")[0],coordinates.get("left")[1]));
+        return neighboursSizeList;
     }
 
-    public void peekAtPosition(int q, int r) {
+//    protected void peekAtNeighbours(int q, int r) {
+//        HashMap<String, int[]> coordinates = getNeighbouringCoordinates(q,r);
+//        for(String direction: coordinates.keySet()) {
+//            peekAtPosition(coordinates.get(direction)[0],coordinates.get(direction)[1]);
+//        }
+//    }
+//
+    private void peekAtPosition(int q, int r) {
         if (gameBoard.get(q) == null) {
             gameBoard.put(q,new HashMap<Integer, Stack<Tile>>());
             gameBoard.get(q).put(r, new Stack<Tile>());
@@ -127,5 +157,32 @@ public class Board {
     public void placeTileAtPosition(int q, int r, Tile tile){
         peekAtPosition(q,r);
         gameBoard.get(q).get(r).push(tile);
+    }
+
+    private ArrayList<Integer[]> convertCoordinatesArray(Collection<int[]> coordinates) {
+        ArrayList<Integer[]> returnList = new ArrayList<>();
+        for(int[] coordinate: coordinates) {
+            Integer[] newCoordinate = new Integer[2];
+            newCoordinate[0] = coordinate[0];
+            newCoordinate[1] = coordinate[1];
+            returnList.add(newCoordinate);
+        }
+        return returnList;
+    }
+
+    public ArrayList<Integer[]> getCommonNeighbours(int fromQ, int fromR, int toQ, int toR) {
+        Collection<int[]> valuesA = Board.getBoardInstance().getNeighbouringCoordinates(fromQ, fromR).values();
+        Collection<int[]> valuesB = Board.getBoardInstance().getNeighbouringCoordinates(toQ, toR).values();
+        ArrayList<Integer[]> neighboursA = convertCoordinatesArray(valuesA);
+        ArrayList<Integer[]> neighboursB = convertCoordinatesArray(valuesB);
+        ArrayList<Integer[]> commonNeighbours = new ArrayList<>();
+        for(Integer[] locationA: neighboursA) {
+            for(Integer[] locationB: neighboursB) {
+                if(locationA[0].equals(locationB[0]) && locationA[1].equals(locationB[1])) {
+                    commonNeighbours.add(locationA);
+                }
+            }
+        }
+        return commonNeighbours;
     }
 }

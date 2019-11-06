@@ -3,17 +3,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="x-ua-compatible" content="IE=edge"/>
-<title>Test results - GenericMoveHandlerTest</title>
+<title>Test results - PlaceHandlerTest</title>
 <link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
 <link href="../css/style.css" rel="stylesheet" type="text/css"/>
 <script src="../js/report.js" type="text/javascript"></script>
 </head>
 <body>
 <div id="content">
-<h1>GenericMoveHandlerTest</h1>
+<h1>PlaceHandlerTest</h1>
 <div class="breadcrumbs">
 <a href="../index.html">all</a> &gt; 
-<a href="../packages/handlers.html">handlers</a> &gt; GenericMoveHandlerTest</div>
+<a href="../packages/handlers.html">handlers</a> &gt; PlaceHandlerTest</div>
 <div id="summary">
 <table>
 <tr>
@@ -23,7 +23,7 @@
 <tr>
 <td>
 <div class="infoBox" id="tests">
-<div class="counter">14</div>
+<div class="counter">10</div>
 <p>tests</p>
 </div>
 </td>
@@ -41,7 +41,7 @@
 </td>
 <td>
 <div class="infoBox" id="duration">
-<div class="counter">0.013s</div>
+<div class="counter">0.005s</div>
 <p>duration</p>
 </div>
 </td>
@@ -75,73 +75,53 @@
 </tr>
 </thead>
 <tr>
-<td class="success">testBfsTileCountSearch()</td>
-<td class="success">0.001s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">testBlackCannotMoveWhiteTile()</td>
-<td class="success">0.001s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">testCanMoveATile()</td>
-<td class="success">0.001s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">testCannotEmptyLocation()</td>
-<td class="success">0.001s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">testCannotMoveTileWhenQueenNotPlaced()</td>
+<td class="success">checkMustPlayQueenIfQueenHasNotBeenPlayed()</td>
 <td class="success">0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">testCannotMoveToNoContactLocation()</td>
+<td class="success">checkMustPlayedQueenWhenQueenHasBeenPlayed()</td>
 <td class="success">0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">testNoIslandExistsWhenDo()</td>
-<td class="success">0.002s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">testNoIslandExistsWhenDont()</td>
+<td class="success">testCanPlayTileWithContact()</td>
 <td class="success">0.001s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">testSlideIsBiggerThenOneMove()</td>
+<td class="success">testCanPlayTileWithOpponentContact()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testCanPlayTileWithoutContact()</td>
+<td class="success">0.001s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">testCanPlayTileWithoutOpponentContact()</td>
 <td class="success">0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">testSlideIsOneMove()</td>
+<td class="success">testCanPlayerPlayTileIfNoTileLeftToPlay()</td>
 <td class="success">0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">testSlideWhenDirectionBlocked()</td>
-<td class="success">0.001s</td>
+<td class="success">testCanPlayerPlayTileIfTileLeftToPlay()</td>
+<td class="success">0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">testSlideWhenDirectionNotBlocked()</td>
-<td class="success">0.001s</td>
+<td class="success">testCheckIsLocationEmptyWhenEmpty()</td>
+<td class="success">0s</td>
 <td class="success">passed</td>
 </tr>
 <tr>
-<td class="success">testSlideWhenKeepContact()</td>
+<td class="success">testCheckIsLocationEmptyWhenNotEmpty()</td>
 <td class="success">0.001s</td>
-<td class="success">passed</td>
-</tr>
-<tr>
-<td class="success">testSlideWhenLoseContact()</td>
-<td class="success">0.002s</td>
 <td class="success">passed</td>
 </tr>
 </table>

@@ -192,7 +192,7 @@ public class GenericMoveHandlerTest {
         placeHandler.playTileTest(Hive.Player.WHITE,tile,-1,0);
         placeHandler.playTileTest(Hive.Player.WHITE,tile,0,1);
 
-        assertFalse(genericMoveHandler.testSlideDirection(0,0,-1,1));
+        assertFalse(genericMoveHandler.checkCommonNeighboursSize(0,0,-1,1));
     }
 
     @Test
@@ -208,7 +208,7 @@ public class GenericMoveHandlerTest {
         placeHandler.playTileTest(Hive.Player.WHITE,tile,-1,0);
         placeHandler.playTileTest(Hive.Player.WHITE,tile,0,1);
 
-        assertTrue(genericMoveHandler.testSlideDirection(0,0,-1,1));
+        assertTrue(genericMoveHandler.checkCommonNeighboursSize(0,0,-1,1));
     }
 
     @Test
@@ -226,7 +226,7 @@ public class GenericMoveHandlerTest {
         placeHandler.playTileTest(Hive.Player.WHITE,tile,-2,1);
         placeHandler.playTileTest(Hive.Player.WHITE,tile,-2,2);
 
-        assertFalse(genericMoveHandler.testSlideContact(-2,2,-1,2));
+        assertFalse(genericMoveHandler.checkWhileSlidingKeepContact(-2,2,-1,2));
     }
 
     @Test
@@ -265,6 +265,6 @@ public class GenericMoveHandlerTest {
         placeHandler.playTileTest(Hive.Player.WHITE,tile5,-2,1);
         placeHandler.playTileTest(Hive.Player.WHITE,tile6,-2,2);
 
-        assertTrue(genericMoveHandler.testSlideContact(-2,2,-1,2));
+        assertTrue(genericMoveHandler.checkWhileSlidingKeepContact(-2,2,-1,2));
     }
 }
