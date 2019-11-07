@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Stack;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -266,5 +267,20 @@ public class GenericMoveHandlerTest {
         placeHandler.playTileTest(Hive.Player.WHITE,tile6,-2,2);
         Tile tile = Board.getBoardInstance().removeTopTileAtPosition(-2,2);
         assertTrue(genericMoveHandler.checkWhileSlidingKeepContact(-2,2,-1,2));
+    }
+
+    @Test
+    void testFindPathToLocationFindsCorrectPaths() {
+        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
+        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        Tile tile = new Tile();
+        tile.setPlayedByPlayer(Hive.Player.WHITE);
+        tile.setCreature(Hive.Tile.SPIDER);
+        placeHandler.naivePlayTile(tile,0,0);
+        HashMap<String, Integer> goal = new HashMap<>();
+        goal.put("q",3);
+        goal.put("r",0);
+        ArrayList<ArrayList<HashMap<String, Integer>>> paths = genericMoveHandler.findPathToLocation(0,0,Hive.Player.WHITE, Hive.Tile.SPIDER,null,goal,0,3);
+        System.out.println(paths);
     }
 }

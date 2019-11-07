@@ -63,7 +63,6 @@ public class HiveGame implements Hive {
                 break;
             case QUEEN_BEE:
                 genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
-                //TO DO find route
                 break;
             case SOLDIER_ANT:
                 genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);

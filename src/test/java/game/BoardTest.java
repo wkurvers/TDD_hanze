@@ -24,13 +24,6 @@ class BoardTest {
     }
 
     @Test
-    void testGetFilledLocation() throws ArrayIndexOutOfBoundsException {
-        Board gameBoard = Board.getBoardInstance();
-        gameBoard.placeTileAtPosition(0,0, new Tile());
-        //assertEquals(gameBoard.getPosition(0,0).getClass().getName(),"java.util.Stack");
-    }
-
-    @Test
     void testGetTileAtLocation(){
         Board gameBoard = Board.getBoardInstance();
         Tile newTile = new Tile();

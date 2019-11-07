@@ -64,15 +64,19 @@ public class GenericMoveHandler {
             throw new Hive.IllegalMove("There is no tile to move");
         }
         if (tile.getPlayedByPlayer() != player) {
+            PlaceHandler.getPlaceHandler().naivePlayTile(tile,fromQ,fromR);
             throw new Hive.IllegalMove("This tile does not belong to this player");
         }
         if (!PlaceHandler.getPlaceHandler().checkHasPlayedQueen(player)) {
+            PlaceHandler.getPlaceHandler().naivePlayTile(tile,fromQ,fromR);
             throw new Hive.IllegalMove("This player's queen has not been played yet");
         }
         if (!checkContactExists(toQ,toR)) {
+            PlaceHandler.getPlaceHandler().naivePlayTile(tile,fromQ,fromR);
             throw new Hive.IllegalMove("This move results in the tile having no contact");
         }
         if (!validCreatureSpecific(tile,fromQ,fromR,toQ,toR)) {
+            PlaceHandler.getPlaceHandler().naivePlayTile(tile,fromQ,fromR);
             throw new Hive.IllegalMove("This creature cannot make this move");
         }
         PlaceHandler.getPlaceHandler().naivePlayTile(tile,toQ,toR);
@@ -104,33 +108,6 @@ public class GenericMoveHandler {
 
     public boolean checkSlideDistanceIsOne(int fromQ, int fromR, int toQ, int toR) {
         return Math.abs(Math.abs(fromQ)-Math.abs(toQ)) <= 1 && Math.abs(Math.abs(fromR)-Math.abs(toR)) <= 1;
-        //2 - (-1) = 3
-        //-2 - (-2) = 0
-        //3 + 0 = 3
-
-        //-3 - (-2) = -1
-        //0 - (2) = -2
-        // -1 + (-2) = -3 = 3
-
-        //0 - 2 = -2
-        //0 - 0 = 0
-        //-2 + 0 = -2 = 2
-
-        //0 - 2 = -2
-        //0 - (-2) = 2
-        // -2 + 2 = 0
-        //------
-        //min(0,0) = 0
-        //max(3,-3) = 3
-        //abs(0-3) = 3
-
-        //min(0,0) = 0
-        //max(3,0) = 3
-        //abs(0-3) = 3
-
-        //min(0,0) = 0
-        //max(-3,2) = 2
-        //abs(0-2) = 2
     }
 
     private boolean checkContactExists(int q, int r) {
@@ -166,46 +143,56 @@ public class GenericMoveHandler {
         return commonNeighbours.size() >= 1;
     }
 
-    private ArrayList<HashMap<String,Integer>> successors(HashMap<String,Integer> location) {
+    private ArrayList<HashMap<String,Integer>> getAllSuccessors(HashMap<String,Integer> location) {
         ArrayList<HashMap<String,Integer>>  successors = new ArrayList<>();
-        HashMap<String,Integer> topLeft = new HashMap<>();
-        topLeft.put("q",location.get("q"));
-        topLeft.put("r",location.get("r")-1);
+        HashMap<String,Integer> topLeft = parseCoordinatesToHashMap(location.get("q"),location.get("r")-1);
+        successors.add(topLeft);
+
+        HashMap<String,Integer> topRight = parseCoordinatesToHashMap(location.get("q")+1,location.get("r")-1);
+        successors.add(topRight);
+
+        HashMap<String,Integer> right = parseCoordinatesToHashMap(location.get("q")+1,location.get("r"));
+        successors.add(right);
+
+        HashMap<String,Integer> bottomRight = parseCoordinatesToHashMap(location.get("q"),location.get("r")+1);
+        successors.add(bottomRight);
+
+        HashMap<String,Integer> bottomLeft = parseCoordinatesToHashMap(location.get("q")-1,location.get("r")+1);
+        successors.add(bottomLeft);
+
+        HashMap<String,Integer> left = parseCoordinatesToHashMap(location.get("q")-1,location.get("r"));
+        successors.add(left);
+        return successors;
+    }
+
+    private ArrayList<HashMap<String,Integer>> getFilledSuccessors(HashMap<String,Integer> location) {
+        ArrayList<HashMap<String,Integer>>  successors = new ArrayList<>();
+        HashMap<String,Integer> topLeft = parseCoordinatesToHashMap(location.get("q"),location.get("r")-1);
         if (Board.getBoardInstance().getPosition(topLeft.get("q"),topLeft.get("r")) != null) {
             successors.add(topLeft);
         }
 
-        HashMap<String,Integer> topRight = new HashMap<>();
-        topRight.put("q",location.get("q")+1);
-        topRight.put("r",location.get("r")-1);
+        HashMap<String,Integer> topRight = parseCoordinatesToHashMap(location.get("q")+1,location.get("r")-1);
         if (Board.getBoardInstance().getPosition(topRight.get("q"),topRight.get("r")) != null) {
             successors.add(topRight);
         }
 
-        HashMap<String,Integer> right = new HashMap<>();
-        right.put("q",location.get("q")+1);
-        right.put("r",location.get("r"));
+        HashMap<String,Integer> right = parseCoordinatesToHashMap(location.get("q")+1,location.get("r"));
         if (Board.getBoardInstance().getPosition(right.get("q"),right.get("r")) != null) {
             successors.add(right);
         }
 
-        HashMap<String,Integer> bottomRight = new HashMap<>();
-        bottomRight.put("q",location.get("q"));
-        bottomRight.put("r",location.get("r")+1);
+        HashMap<String,Integer> bottomRight = parseCoordinatesToHashMap(location.get("q"),location.get("r")+1);
         if (Board.getBoardInstance().getPosition(bottomRight.get("q"),bottomRight.get("r")) != null) {
             successors.add(bottomRight);
         }
 
-        HashMap<String,Integer> bottomLeft = new HashMap<>();
-        bottomLeft.put("q",location.get("q")-1);
-        bottomLeft.put("r",location.get("r")+1);
+        HashMap<String,Integer> bottomLeft = parseCoordinatesToHashMap(location.get("q")-1,location.get("r")+1);
         if (Board.getBoardInstance().getPosition(bottomLeft.get("q"),bottomLeft.get("r")) != null) {
             successors.add(bottomLeft);
         }
 
-        HashMap<String,Integer> left = new HashMap<>();
-        left.put("q",location.get("q")-1);
-        left.put("r",location.get("r"));
+        HashMap<String,Integer> left = parseCoordinatesToHashMap(location.get("q")-1,location.get("r"));
         if (Board.getBoardInstance().getPosition(left.get("q"),left.get("r")) != null) {
             successors.add(left);
         }
@@ -231,7 +218,7 @@ public class GenericMoveHandler {
             }
             visited.add(locationNode);
             totalCount += Board.getBoardInstance().getPosition(locationNode.get("q"),locationNode.get("r")).size();
-            ArrayList<HashMap<String,Integer>> successors = successors(locationNode);
+            ArrayList<HashMap<String,Integer>> successors = getFilledSuccessors(locationNode);
             for (HashMap<String,Integer> child: successors) {
                 if (!visited.contains(child)) {
                     queue.add(child);
@@ -239,6 +226,86 @@ public class GenericMoveHandler {
             }
         }
         return totalCount;
+    }
+
+    private HashMap<String, Integer> parseCoordinatesToHashMap(int q, int r) {
+        HashMap<String,Integer> location = new HashMap<>();
+        location.put("q",q);
+        location.put("r",r);
+        return location;
+    }
+
+    private boolean isGoal(HashMap<String, Integer> location, HashMap<String, Integer> goal) {
+        return location.get("q").equals(goal.get("q")) && location.get("r").equals(goal.get("r"));
+    }
+
+    private ArrayList<HashMap<String,Integer>> orderSuccessorsWithHeuristics(ArrayList<HashMap<String,Integer>> successors, HashMap<String,Integer> goal) {
+        for(int count = 0; count <= successors.size(); count++) {
+            for(int i2 = 1; i2<successors.size(); i2++) {
+                HashMap<String,Integer> successor2 = successors.get(i2);
+                int i1 = i2-1;
+                HashMap<String,Integer> successor1 = successors.get(i1);
+                if(successor1.equals(successor2)) {
+                    continue;
+                }
+                HashMap<String,Integer> closest = getClosestToGoal(successor1,successor2,goal);
+                if(successor2.equals(closest)) {
+                    successors.set(i1,successor2);
+                    successors.set(i2,successor1);
+                }
+            }
+        }
+        return successors;
+    }
+
+    private HashMap<String, Integer> getClosestToGoal(HashMap<String, Integer> s1, HashMap<String, Integer> s2, HashMap<String, Integer> goal) {
+        int score1 = getScore(s1,goal);
+        int score2 = getScore(s2,goal);
+        if(score1 <= score2) {
+            return s1;
+        }
+        return s2;
+    }
+
+    private int getScore(HashMap<String, Integer> s,HashMap<String, Integer> goal) {
+        int deltaQ = Math.abs(Math.abs(s.get("q")) - Math.abs(goal.get("q")));
+        int deltaR = Math.abs(Math.abs(s.get("r")) - Math.abs(goal.get("r")));
+        if(deltaQ ==0) {deltaQ = 1;}
+        if(deltaR ==0) {deltaR = 1;}
+        return deltaQ * deltaR;
+    }
+
+    public ArrayList<ArrayList<HashMap<String, Integer>>> findPathToLocation(int fromQ, int fromR, Hive.Player player, Hive.Tile creature, ArrayList<HashMap<String, Integer>> path, HashMap<String, Integer> goal, int depth,int maxDepth) {
+        if(path == null) {path = new ArrayList<HashMap<String, Integer>>();}
+        HashMap<String, Integer> location = parseCoordinatesToHashMap(fromQ,fromR);
+        path.add(location);
+        if (isGoal(location,goal)) {
+            ArrayList<ArrayList<HashMap<String, Integer>>> subPaths = new ArrayList<>();
+            subPaths.add(path);
+            return subPaths;
+        }
+        if (maxDepth <= depth) {
+            return new ArrayList<>();
+        }
+        ArrayList<ArrayList<HashMap<String, Integer>>> paths = new ArrayList<>();
+        //order successors based on heuristics
+        ArrayList<HashMap<String,Integer>> orderedSuccessors = orderSuccessorsWithHeuristics(getAllSuccessors(location),goal);
+        for (HashMap<String,Integer> locationToGo: orderedSuccessors) {
+            if (!path.contains(locationToGo)) {
+                //Check of locationToGo valid is for the creature
+                int q = locationToGo.get("q");
+                int r = locationToGo.get("r");
+                ArrayList<ArrayList<HashMap<String, Integer>>> newPaths = findPathToLocation(q,r,player,creature,path,goal,depth+1,maxDepth);
+                if(newPaths.size() == 0) {
+                    path.remove(path.size()-1);
+                }
+                for (ArrayList<HashMap<String, Integer>> newPath: newPaths) {
+                    paths.add(newPath);
+                }
+            }
+        }
+        path.remove(path.size()-1);
+        return paths;
     }
 
     //------------------------------------------------- TEST METHODS
