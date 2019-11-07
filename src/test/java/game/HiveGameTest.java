@@ -182,4 +182,32 @@ class HiveGameTest {
             game.move(0,1,0,0); //WHITE
         });
     }
+
+    @Test
+    void testValidSoldierAntSlide() {
+        assertDoesNotThrow(() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.QUEEN_BEE,0,0);//WHITE
+            game.play(Hive.Tile.QUEEN_BEE,-1,1);//BLACK
+            game.play(Hive.Tile.BEETLE,1,0);//WHITE
+            game.play(Hive.Tile.SOLDIER_ANT,-1,2);//BLACK
+            game.play(Hive.Tile.BEETLE,1,1);//WHITE
+
+            game.move(-1,2,1,-1); //BLACK
+        });
+    }
+
+    @Test
+    void testInvalidSoldierAntSlide() {
+        assertThrows(Hive.IllegalMove.class,() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.QUEEN_BEE,0,0);//WHITE
+            game.play(Hive.Tile.QUEEN_BEE,-1,1);//BLACK
+            game.play(Hive.Tile.BEETLE,1,0);//WHITE
+            game.play(Hive.Tile.SOLDIER_ANT,-1,2);//BLACK
+            game.play(Hive.Tile.BEETLE,1,1);//WHITE
+
+            game.move(-1,2,-3,0); //BLACK
+        });
+    }
 }

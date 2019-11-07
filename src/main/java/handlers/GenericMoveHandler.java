@@ -34,27 +34,24 @@ public class GenericMoveHandler {
         /*
         Each creature has its own moving constraints
          */
-        CreatureMoveHandler creatureMoveHandler;
-        switch (tileToMove.getCreature()) {
+        return getCreatureMoveHandler(tileToMove.getCreature()).isValidMove(fromQ, fromR, toQ, toR);
+    }
+
+    private CreatureMoveHandler getCreatureMoveHandler(Hive.Tile creature) throws Hive.IllegalMove {
+        switch (creature) {
             case SOLDIER_ANT:
-                creatureMoveHandler = AntMoveHandler.getInstance();
-                break;
+                return AntMoveHandler.getInstance();
             case GRASSHOPPER:
-                creatureMoveHandler = GrasshopperMoveHandler.getInstance();
-                break;
+                return GrasshopperMoveHandler.getInstance();
             case QUEEN_BEE:
-                creatureMoveHandler = QueenBeeMoveHandler.getInstance();
-                break;
+                return QueenBeeMoveHandler.getInstance();
             case SPIDER:
-                creatureMoveHandler = SpiderMoveHandler.getInstance();
-                break;
+                return SpiderMoveHandler.getInstance();
             case BEETLE:
-                creatureMoveHandler = BeetleMoveHandler.getInstance();
-                break;
+                return BeetleMoveHandler.getInstance();
             default:
-                throw new Hive.IllegalMove("No valid creature was specified");
+                throw new Hive.IllegalMove("This creature does not exists");
         }
-        return creatureMoveHandler.isValidMove(fromQ, fromR, toQ, toR);
     }
 
     public void moveTile(int fromQ, int fromR, int toQ, int toR, Hive.Player player) throws Hive.IllegalMove {
@@ -289,15 +286,25 @@ public class GenericMoveHandler {
             return new ArrayList<>();
         }
         ArrayList<ArrayList<HashMap<String, Integer>>> paths = new ArrayList<>();
-        //order successors based on heuristics
         ArrayList<HashMap<String,Integer>> orderedSuccessors = orderSuccessorsWithHeuristics(getAllSuccessors(location),goal);
         for (HashMap<String,Integer> locationToGo: orderedSuccessors) {
             if (!path.contains(locationToGo)) {
                 //Check of locationToGo valid is for the creature
-                int q = locationToGo.get("q");
-                int r = locationToGo.get("r");
-                ArrayList<ArrayList<HashMap<String, Integer>>> newPaths = findPathToLocation(q,r,player,creature,path,goal,depth+1,maxDepth);
-                paths.addAll(newPaths);
+                try{
+                    CreatureMoveHandler creatureMoveHandler = getCreatureMoveHandler(creature);
+                    int q = locationToGo.get("q");
+                    int r = locationToGo.get("r");
+                    if(!creatureMoveHandler.isValidMove(fromQ,fromR,q,r)) {
+                        continue;
+                    }
+                    ArrayList<ArrayList<HashMap<String, Integer>>> newPaths = findPathToLocation(q,r,player,creature,path,goal,depth+1,maxDepth);
+                    Iterator<ArrayList<HashMap<String, Integer>>> iterator = newPaths.iterator();
+                    while(iterator.hasNext()) {
+                        paths.add( (ArrayList<HashMap<String, Integer>>) iterator.next().clone());
+                    }
+                } catch (Hive.IllegalMove ex) {
+                    ex.printStackTrace();
+                }
             }
         }
         path.remove(path.size()-1);

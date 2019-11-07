@@ -65,8 +65,25 @@ public class HiveGame implements Hive {
                 genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
                 break;
             case SOLDIER_ANT:
-                genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
-                //TO DO find route
+                HashMap<String, Integer> goal = new HashMap<>();
+                goal.put("q",toQ);
+                goal.put("r",toR);
+                ArrayList<ArrayList<HashMap<String, Integer>>> validPaths = genericMoveHandler.findPathToLocation(fromQ,fromR,currentPlayer,Tile.SOLDIER_ANT,null,goal,0,100);
+                if(validPaths.size() > 0) {
+                    for(ArrayList<HashMap<String, Integer>> validPath: validPaths) {
+                        try {
+                            for(int i=0; i<validPath.size()-1;i++) {
+                                HashMap<String, Integer> location = validPath.get(i);
+                                HashMap<String, Integer> locationToMoveTo = validPath.get(i+1);
+                                genericMoveHandler.slideTile(location.get("q"),location.get("r"),locationToMoveTo.get("q"),locationToMoveTo.get("r"),currentPlayer);
+                            }
+                        } catch (IllegalMove ex) {
+                            continue;
+                        }
+                    }
+                } else {
+                    throw new IllegalMove("This tile cannot move to that location");
+                }
                 break;
             case SPIDER:
                 genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
