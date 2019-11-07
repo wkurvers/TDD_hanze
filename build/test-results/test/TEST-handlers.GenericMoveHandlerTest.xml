@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="handlers.GenericMoveHandlerTest" tests="1" skipped="1" failures="0" errors="0" timestamp="2019-11-07T11:54:45" hostname="jelmer-Aspire-V5-591G" time="123.524">
+<testsuite name="handlers.GenericMoveHandlerTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2019-11-07T12:44:13" hostname="jelmer-Aspire-V5-591G" time="0.024">
   <properties/>
-  <testcase name="testFindPathToLocationFindsCorrectPaths()" classname="handlers.GenericMoveHandlerTest" time="123.524">
-    <skipped/>
-  </testcase>
-  <system-out><![CDATA[]]></system-out>
+  <testcase name="testFindPathToLocationFindsCorrectPaths()" classname="handlers.GenericMoveHandlerTest" time="0.024"/>
+  <system-out><![CDATA[[[{q=0, r=0}]]
+]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

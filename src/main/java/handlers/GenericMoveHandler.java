@@ -285,6 +285,7 @@ public class GenericMoveHandler {
             return subPaths;
         }
         if (maxDepth <= depth) {
+            path.remove(path.size()-1);
             return new ArrayList<>();
         }
         ArrayList<ArrayList<HashMap<String, Integer>>> paths = new ArrayList<>();
@@ -296,12 +297,7 @@ public class GenericMoveHandler {
                 int q = locationToGo.get("q");
                 int r = locationToGo.get("r");
                 ArrayList<ArrayList<HashMap<String, Integer>>> newPaths = findPathToLocation(q,r,player,creature,path,goal,depth+1,maxDepth);
-                if(newPaths.size() == 0) {
-                    path.remove(path.size()-1);
-                }
-                for (ArrayList<HashMap<String, Integer>> newPath: newPaths) {
-                    paths.add(newPath);
-                }
+                paths.addAll(newPaths);
             }
         }
         path.remove(path.size()-1);
