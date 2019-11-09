@@ -279,7 +279,15 @@ public class GenericMoveHandler {
         if (isGoal(location,goal)) {
             ArrayList<ArrayList<HashMap<String, Integer>>> subPaths = new ArrayList<>();
             subPaths.add(path);
-            return subPaths;
+            try {
+                if(getCreatureMoveHandler(creature).validatePathSize(depth)) {
+                    return subPaths;
+                }
+            } catch (Hive.IllegalMove ex) {
+                ex.printStackTrace();
+            }
+            path.remove(path.size()-1);
+            return new ArrayList<>();
         }
         if (maxDepth <= depth) {
             path.remove(path.size()-1);
@@ -309,6 +317,24 @@ public class GenericMoveHandler {
         }
         path.remove(path.size()-1);
         return paths;
+    }
+
+    public void tryMakeSlidingMove(ArrayList<ArrayList<HashMap<String, Integer>>> validPaths, Hive.Player currentPlayer) throws Hive.IllegalMove {
+        if(validPaths.size() > 0) {
+            for(ArrayList<HashMap<String, Integer>> validPath: validPaths) {
+                try {
+                    for(int i=0; i<validPath.size()-1;i++) {
+                        HashMap<String, Integer> location = validPath.get(i);
+                        HashMap<String, Integer> locationToMoveTo = validPath.get(i+1);
+                        GenericMoveHandler.getGenericMoveHandler().slideTile(location.get("q"),location.get("r"),locationToMoveTo.get("q"),locationToMoveTo.get("r"),currentPlayer);
+                    }
+                } catch (Hive.IllegalMove ex) {
+                    continue;
+                }
+            }
+        } else {
+            throw new Hive.IllegalMove("This tile cannot move to that location");
+        }
     }
 
     //------------------------------------------------- TEST METHODS

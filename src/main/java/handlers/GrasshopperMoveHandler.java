@@ -16,4 +16,9 @@ public class GrasshopperMoveHandler implements CreatureMoveHandler {
     public boolean isValidMove(int fromQ, int fromR, int toQ, int toR) {
         return true;
     }
+
+    @Override
+    public boolean validatePathSize(int depth) {
+        return true; //grasshopper has no sliding movement
+    }
 }

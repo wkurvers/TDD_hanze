@@ -210,4 +210,30 @@ class HiveGameTest {
             game.move(-1,2,-3,0); //BLACK
         });
     }
+
+    @Test
+    void testValidSpiderSlide() {
+        assertDoesNotThrow(() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.QUEEN_BEE,1,-1);//WHITE
+            game.play(Hive.Tile.QUEEN_BEE,1,0);//BLACK
+            game.play(Hive.Tile.SPIDER,1,-2);//WHITE
+            game.play(Hive.Tile.SOLDIER_ANT,0,1);//BLACK
+
+            game.move(1,-2,2,0); //BLACK
+        });
+    }
+
+    @Test
+    void testInvalidSpiderSlide() {
+        assertThrows(Hive.IllegalMove.class, () -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.QUEEN_BEE,1,-1);//WHITE
+            game.play(Hive.Tile.QUEEN_BEE,1,0);//BLACK
+            game.play(Hive.Tile.SPIDER,1,-2);//WHITE
+            game.play(Hive.Tile.SOLDIER_ANT,0,1);//BLACK
+
+            game.move(1,-2,1,1); //BLACK
+        });
+    }
 }

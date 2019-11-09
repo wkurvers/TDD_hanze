@@ -18,4 +18,9 @@ public class QueenBeeMoveHandler implements CreatureMoveHandler {
     public boolean isValidMove(int fromQ, int fromR, int toQ, int toR) {
         return Board.getBoardInstance().getSizeAtPosition(toQ,toR) == 0;
     }
+
+    @Override
+    public boolean validatePathSize(int depth) {
+        return depth==1; //Queen can move 1 space
+    }
 }

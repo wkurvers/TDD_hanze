@@ -288,7 +288,7 @@ public class GenericMoveHandlerTest {
         goal.put("q",-1);
         goal.put("r",0);
         ArrayList<ArrayList<HashMap<String, Integer>>> validPaths = genericMoveHandler.findPathToLocation(-1,3, tile.getPlayedByPlayer(),tile.getCreature(),null,goal,0,100);
-        assertEquals(validPaths.size(),2);
+        assertEquals(2,validPaths.size());
     }
 
     @Test
@@ -309,6 +309,56 @@ public class GenericMoveHandlerTest {
         goal.put("q",-1);
         goal.put("r",2);
         ArrayList<ArrayList<HashMap<String, Integer>>> validPaths = genericMoveHandler.findPathToLocation(-1,3, tile.getPlayedByPlayer(),tile.getCreature(),null,goal,0,100);
-        assertEquals(validPaths.size(),0);
+        assertEquals(0,validPaths.size());
+    }
+
+    @Test
+    void testValidSlideSpider() {
+        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
+        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        Tile tile = new Tile();
+        tile.setCreature(Hive.Tile.SPIDER);
+        tile.setPlayedByPlayer(Hive.Player.WHITE);
+
+        placeHandler.naivePlayTile(tile,-1,-1);
+        placeHandler.naivePlayTile(tile,-2,0);
+        placeHandler.naivePlayTile(tile,-3,1);
+        placeHandler.naivePlayTile(tile,-3,2);
+        placeHandler.naivePlayTile(tile,-2,2);
+        placeHandler.naivePlayTile(tile,-1,2);
+        placeHandler.naivePlayTile(tile,-0,1);
+        placeHandler.naivePlayTile(tile,1,0);
+        placeHandler.naivePlayTile(tile,1,-1);
+        placeHandler.naivePlayTile(tile,1,-2);
+        HashMap<String, Integer> goal = new HashMap<>();
+        goal.put("q",-2);
+        goal.put("r",1);
+        ArrayList<ArrayList<HashMap<String, Integer>>> validPaths = genericMoveHandler.findPathToLocation(1,-2, tile.getPlayedByPlayer(),tile.getCreature(),null,goal,0,3);
+        assertEquals(1,validPaths.size());
+    }
+
+    @Test
+    void testInvalidSlideSpider() {
+        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
+        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        Tile tile = new Tile();
+        tile.setCreature(Hive.Tile.SPIDER);
+        tile.setPlayedByPlayer(Hive.Player.WHITE);
+
+        placeHandler.naivePlayTile(tile,-1,-1);
+        placeHandler.naivePlayTile(tile,-2,0);
+        placeHandler.naivePlayTile(tile,-3,1);
+        placeHandler.naivePlayTile(tile,-3,2);
+        placeHandler.naivePlayTile(tile,-2,2);
+        placeHandler.naivePlayTile(tile,-1,2);
+        placeHandler.naivePlayTile(tile,-0,1);
+        placeHandler.naivePlayTile(tile,1,0);
+        placeHandler.naivePlayTile(tile,1,-1);
+        placeHandler.naivePlayTile(tile,1,-2);
+        HashMap<String, Integer> goal = new HashMap<>();
+        goal.put("q",-3);
+        goal.put("r",0);
+        ArrayList<ArrayList<HashMap<String, Integer>>> validPaths = genericMoveHandler.findPathToLocation(1,-2, tile.getPlayedByPlayer(),tile.getCreature(),null,goal,0,3);
+        assertEquals(0,validPaths.size());
     }
 }

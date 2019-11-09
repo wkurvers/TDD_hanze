@@ -26,6 +26,11 @@ public class AntMoveHandler implements CreatureMoveHandler {
         return hasContact && isEmptySpot;
     }
 
+    @Override
+    public boolean validatePathSize(int depth) {
+        return true; //Ant can move infinite amount of spaces
+    }
+
     private boolean hasContact(int toQ, int toR) {
         Board gameBoard = Board.getBoardInstance();
         ArrayList<Tile> neighbours = gameBoard.getNeighbours(toQ, toR);

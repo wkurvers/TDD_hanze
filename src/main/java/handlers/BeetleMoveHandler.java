@@ -16,4 +16,9 @@ public class BeetleMoveHandler implements CreatureMoveHandler {
     public boolean isValidMove(int fromQ, int fromR, int toQ, int toR) {
         return true;
     }
+
+    @Override
+    public boolean validatePathSize(int depth) {
+        return depth==1; //Beetle can move 1 space
+    }
 }

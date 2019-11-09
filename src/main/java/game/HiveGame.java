@@ -1,6 +1,5 @@
 package game;
 
-import creatures.Tile;
 import handlers.GenericMoveHandler;
 import handlers.PlaceHandler;
 
@@ -53,10 +52,16 @@ public class HiveGame implements Hive {
         switchPlayer();
     }
 
+
+
     @Override
     public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
         GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
         creatures.Tile tileToMove = Board.getBoardInstance().getTopTileAtPosition(fromQ,fromR);
+        HashMap<String, Integer> goal = new HashMap<>();
+        goal.put("q",toQ);
+        goal.put("r",toR);
+        ArrayList<ArrayList<HashMap<String, Integer>>> validPaths;
         switch (tileToMove.getCreature()) {
             case BEETLE:
                 genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
@@ -65,29 +70,12 @@ public class HiveGame implements Hive {
                 genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
                 break;
             case SOLDIER_ANT:
-                HashMap<String, Integer> goal = new HashMap<>();
-                goal.put("q",toQ);
-                goal.put("r",toR);
-                ArrayList<ArrayList<HashMap<String, Integer>>> validPaths = genericMoveHandler.findPathToLocation(fromQ,fromR,currentPlayer,Tile.SOLDIER_ANT,null,goal,0,100);
-                if(validPaths.size() > 0) {
-                    for(ArrayList<HashMap<String, Integer>> validPath: validPaths) {
-                        try {
-                            for(int i=0; i<validPath.size()-1;i++) {
-                                HashMap<String, Integer> location = validPath.get(i);
-                                HashMap<String, Integer> locationToMoveTo = validPath.get(i+1);
-                                genericMoveHandler.slideTile(location.get("q"),location.get("r"),locationToMoveTo.get("q"),locationToMoveTo.get("r"),currentPlayer);
-                            }
-                        } catch (IllegalMove ex) {
-                            continue;
-                        }
-                    }
-                } else {
-                    throw new IllegalMove("This tile cannot move to that location");
-                }
+                validPaths = genericMoveHandler.findPathToLocation(fromQ,fromR,currentPlayer,Tile.SOLDIER_ANT,null,goal,0,100);
+                genericMoveHandler.tryMakeSlidingMove(validPaths,currentPlayer);
                 break;
             case SPIDER:
-                genericMoveHandler.slideTile(fromQ,fromR,toQ,toR,currentPlayer);
-                //TO DO find route
+                validPaths = genericMoveHandler.findPathToLocation(fromQ,fromR,currentPlayer,Tile.SOLDIER_ANT,null,goal,0,3);
+                genericMoveHandler.tryMakeSlidingMove(validPaths,currentPlayer);
                 break;
             case GRASSHOPPER:
                 genericMoveHandler.moveTile(fromQ,fromR,toQ,toR,currentPlayer);
@@ -98,7 +86,7 @@ public class HiveGame implements Hive {
 
     @Override
     public void pass() throws IllegalMove {
-
+        //use bfs to get list of all tiles, then per tile make permutations on on all possible coordinates the could move to, then check all those coordinates
     }
 
     @Override
