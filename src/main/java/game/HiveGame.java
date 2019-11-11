@@ -86,7 +86,7 @@ public class HiveGame implements Hive {
 
     @Override
     public void pass() throws IllegalMove {
-        if(GenericMoveHandler.getGenericMoveHandler().canMakeAnyMove(currentPlayer)) {
+        if(GenericMoveHandler.getGenericMoveHandler().canMakeAnyMove(currentPlayer) && PlaceHandler.getPlaceHandler().hasTilesToPlay(currentPlayer)) {
             throw new IllegalMove("This player can still make a move");
         } else {
             switchPlayer();

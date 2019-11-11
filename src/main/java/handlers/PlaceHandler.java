@@ -47,6 +47,15 @@ public class PlaceHandler {
         this.blackTilesToPlay.put(Hive.Tile.GRASSHOPPER, 3);
     }
 
+    public boolean hasTilesToPlay(Hive.Player player) {
+        HashMap<Hive.Tile, Integer> tilesToPlay = getTilesToPlay(player);
+        int totalTilesToPlay = 0;
+        for(Hive.Tile tileType: tilesToPlay.keySet()) {
+            totalTilesToPlay += tilesToPlay.get(tileType);
+        }
+        return totalTilesToPlay > 0;
+    }
+
     private HashMap<Hive.Tile, Integer> getTilesToPlay(Hive.Player player) {
         HashMap<Hive.Tile, Integer> playerTilesToPlay;
         switch (player) {
