@@ -387,17 +387,23 @@ public class GenericMoveHandler {
         return paths;
     }
 
+    public void resetMove(int fromQ, int fromR, int toQ, int toR) {
+        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(toQ,toR);
+        Board.getBoardInstance().placeTileAtPosition(fromQ,fromR, tile);
+    }
+
     public void tryMakeSlidingMove(ArrayList<ArrayList<HashMap<String, Integer>>> validPaths, Hive.Player currentPlayer) throws Hive.IllegalMove {
         if(validPaths.size() > 0) {
             for(ArrayList<HashMap<String, Integer>> validPath: validPaths) {
-                try {
                     for(int i=0; i<validPath.size()-1;i++) {
                         HashMap<String, Integer> location = validPath.get(i);
                         HashMap<String, Integer> locationToMoveTo = validPath.get(i+1);
+                    try {
                         GenericMoveHandler.getGenericMoveHandler().slideTile(location.get("q"),location.get("r"),locationToMoveTo.get("q"),locationToMoveTo.get("r"),currentPlayer);
+                    } catch (Hive.IllegalMove ex) {
+                        GenericMoveHandler.getGenericMoveHandler().resetMove(location.get("q"),location.get("r"),locationToMoveTo.get("q"),locationToMoveTo.get("r"));
+                        continue;
                     }
-                } catch (Hive.IllegalMove ex) {
-                    continue;
                 }
             }
         } else {

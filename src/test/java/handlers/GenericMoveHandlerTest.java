@@ -283,10 +283,9 @@ public class GenericMoveHandlerTest {
         placeHandler.naivePlayTile(tile,-1,2);
         placeHandler.naivePlayTile(tile,-1,3);
         placeHandler.naivePlayTile(tile,0,2);
-        placeHandler.naivePlayTile(tile,1,1);
         HashMap<String, Integer> goal = new HashMap<>();
-        goal.put("q",-1);
-        goal.put("r",0);
+        goal.put("q",1);
+        goal.put("r",1);
         ArrayList<ArrayList<HashMap<String, Integer>>> validPaths = genericMoveHandler.findPathToLocation(-1,3, tile.getPlayedByPlayer(),tile.getCreature(),null,goal,0,100);
         assertEquals(3,validPaths.size());
     }
