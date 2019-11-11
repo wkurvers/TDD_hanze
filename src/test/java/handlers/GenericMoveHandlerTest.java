@@ -288,7 +288,7 @@ public class GenericMoveHandlerTest {
         goal.put("q",-1);
         goal.put("r",0);
         ArrayList<ArrayList<HashMap<String, Integer>>> validPaths = genericMoveHandler.findPathToLocation(-1,3, tile.getPlayedByPlayer(),tile.getCreature(),null,goal,0,100);
-        assertEquals(2,validPaths.size());
+        assertEquals(3,validPaths.size());
     }
 
     @Test

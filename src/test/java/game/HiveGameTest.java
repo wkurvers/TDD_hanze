@@ -220,7 +220,7 @@ class HiveGameTest {
             game.play(Hive.Tile.SPIDER,1,-2);//WHITE
             game.play(Hive.Tile.SOLDIER_ANT,0,1);//BLACK
 
-            game.move(1,-2,2,0); //BLACK
+            game.move(1,-2,2,0); //WHITE
         });
     }
 
@@ -233,7 +233,33 @@ class HiveGameTest {
             game.play(Hive.Tile.SPIDER,1,-2);//WHITE
             game.play(Hive.Tile.SOLDIER_ANT,0,1);//BLACK
 
-            game.move(1,-2,1,1); //BLACK
+            game.move(1,-2,1,1); //WHITE
+        });
+    }
+
+    @Test
+    void testValidGrasshopperMove() {
+        assertDoesNotThrow(() -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.QUEEN_BEE,0,0);//WHITE
+            game.play(Hive.Tile.QUEEN_BEE,-1,0);//BLACK
+            game.play(Hive.Tile.GRASSHOPPER,1,0);//WHITE
+            game.play(Hive.Tile.SOLDIER_ANT,-2,0);//BLACK
+
+            game.move(1,0,-3,0); //WHITE
+        });
+    }
+
+    @Test
+    void testInvalidGrasshopperMove() {
+        assertThrows(Hive.IllegalMove.class, () -> {
+            HiveGame game = HiveGame.getGame();
+            game.play(Hive.Tile.QUEEN_BEE,0,0);//WHITE
+            game.play(Hive.Tile.QUEEN_BEE,-1,0);//BLACK
+            game.play(Hive.Tile.GRASSHOPPER,1,0);//WHITE
+            game.play(Hive.Tile.SOLDIER_ANT,-1,-1);//BLACK
+
+            game.move(1,0,-3,0); //WHITE
         });
     }
 }

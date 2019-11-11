@@ -64,6 +64,10 @@ public class GenericMoveHandler {
             PlaceHandler.getPlaceHandler().naivePlayTile(tile,fromQ,fromR);
             throw new Hive.IllegalMove("This tile does not belong to this player");
         }
+        if(checkActuallyMoves(fromQ,fromR,toQ,toR)) {
+            PlaceHandler.getPlaceHandler().naivePlayTile(tile,fromQ,fromR);
+            throw new Hive.IllegalMove("This is not a move");
+        }
         if (!PlaceHandler.getPlaceHandler().checkHasPlayedQueen(player)) {
             PlaceHandler.getPlaceHandler().naivePlayTile(tile,fromQ,fromR);
             throw new Hive.IllegalMove("This player's queen has not been played yet");
@@ -103,6 +107,25 @@ public class GenericMoveHandler {
         moveTile(fromQ, fromR, toQ, toR, player);
     }
 
+    //Special boolean method that checks whether or not a tile can slide, this is not used in slideTile() so slideTile() can return accurate error messages
+    public boolean canSlideTile(int fromQ, int fromR, int toQ, int toR) {
+        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
+        if (!checkSlideDistanceIsOne(fromQ,fromR,toQ,toR)) {
+            PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
+            return false;
+        }
+        if (!checkCommonNeighboursSize(fromQ, fromR, toQ, toR)) {
+            PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
+            return false;
+        }
+        if (!checkWhileSlidingKeepContact(fromQ, fromR, toQ, toR)) {
+            PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
+            return false;
+        }
+        PlaceHandler.getPlaceHandler().naivePlayTile(tile, fromQ, fromR);
+        return true;
+    }
+
     public boolean checkSlideDistanceIsOne(int fromQ, int fromR, int toQ, int toR) {
         return Math.abs(Math.abs(fromQ)-Math.abs(toQ)) <= 1 && Math.abs(Math.abs(fromR)-Math.abs(toR)) <= 1;
     }
@@ -116,6 +139,10 @@ public class GenericMoveHandler {
             }
         }
         return false;
+    }
+
+    private boolean checkActuallyMoves(int fromQ, int fromR, int toQ, int toR) {
+        return fromQ != toQ && fromR != toR;
     }
 
     public boolean checkCommonNeighboursSize(int fromQ, int fromR, int toQ, int toR) {
@@ -200,11 +227,52 @@ public class GenericMoveHandler {
         Board board = Board.getBoardInstance();
         HashMap<String,Integer> startLocation = PlaceHandler.getPlaceHandler().getQueenLocation(playerThatPlayedQueen);
         ArrayList<HashMap<String,Integer>> visited = new ArrayList<>();
-        int total = bfs(startLocation,visited);
+        int total = calculateTotalTiles(startLocation,visited);
         return total;
     }
 
-    private int bfs(HashMap<String,Integer> locationNode, ArrayList<HashMap<String,Integer>> visited) {
+    public boolean canMakeAnyMove(Hive.Player player) {
+        if(!PlaceHandler.getPlaceHandler().checkHasPlayedQueen(player)) { return true; }
+        HashMap<String, Integer> queenLocation = PlaceHandler.getPlaceHandler().getQueenLocation(player);
+        return checkIfPossibleMovesForAllTiles(queenLocation, new ArrayList<>(), player);
+    }
+
+    private boolean checkIfPossibleMovesForAllTiles(HashMap<String,Integer> locationNode, ArrayList<HashMap<String,Integer>> visited, Hive.Player player) {
+        Deque<HashMap<String, Integer>> queue = new ArrayDeque<>();
+        queue.add(locationNode);
+        while(queue.size() > 0) {
+            locationNode = queue.pop();
+            Tile tile = Board.getBoardInstance().getTopTileAtPosition(locationNode.get("q"), locationNode.get("r"));
+            if (visited.contains(locationNode)) {
+                continue;
+            }
+            if(tile.getPlayedByPlayer() != player) {
+                continue; // Not this player's tile
+            }
+            if(tile.getCreature() == Hive.Tile.GRASSHOPPER) {
+                return true;
+            }
+            // check can tile move
+            try {
+                CreatureMoveHandler creatureMoveHandler = getCreatureMoveHandler(tile.getCreature());
+                if(creatureMoveHandler.canMakeAnyMove(locationNode.get("q"),locationNode.get("r"),player)) {
+                    return true;
+                }
+            } catch(Hive.IllegalMove ex) {
+                ex.printStackTrace();
+            }
+            visited.add(locationNode);
+            ArrayList<HashMap<String,Integer>> successors = getFilledSuccessors(locationNode);
+            for (HashMap<String,Integer> child: successors) {
+                if (!visited.contains(child)) {
+                    queue.addFirst(child);
+                }
+            }
+        }
+        return false; //True = has possible moves, False = No possible moves
+    }
+
+    private int calculateTotalTiles(HashMap<String,Integer> locationNode, ArrayList<HashMap<String,Integer>> visited) {
         Stack<HashMap<String,Integer>> queue = new Stack<>();
         queue.add(locationNode);
         int totalCount = 0;

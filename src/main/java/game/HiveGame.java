@@ -74,7 +74,7 @@ public class HiveGame implements Hive {
                 genericMoveHandler.tryMakeSlidingMove(validPaths,currentPlayer);
                 break;
             case SPIDER:
-                validPaths = genericMoveHandler.findPathToLocation(fromQ,fromR,currentPlayer,Tile.SOLDIER_ANT,null,goal,0,3);
+                validPaths = genericMoveHandler.findPathToLocation(fromQ,fromR,currentPlayer,Tile.SPIDER,null,goal,0,3);
                 genericMoveHandler.tryMakeSlidingMove(validPaths,currentPlayer);
                 break;
             case GRASSHOPPER:
@@ -86,7 +86,11 @@ public class HiveGame implements Hive {
 
     @Override
     public void pass() throws IllegalMove {
-        //use bfs to get list of all tiles, then per tile make permutations on on all possible coordinates the could move to, then check all those coordinates
+        if(GenericMoveHandler.getGenericMoveHandler().canMakeAnyMove(currentPlayer)) {
+            throw new IllegalMove("This player can still make a move");
+        } else {
+            switchPlayer();
+        }
     }
 
     @Override

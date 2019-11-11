@@ -2,8 +2,10 @@ package handlers;
 
 import creatures.Tile;
 import game.Board;
+import game.Hive;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AntMoveHandler implements CreatureMoveHandler {
     private static AntMoveHandler instance;
@@ -44,5 +46,19 @@ public class AntMoveHandler implements CreatureMoveHandler {
 
     private boolean isEmptySpot(int toQ, int toR) {
         return Board.getBoardInstance().getSizeAtPosition(toQ,toR) == 0;
+    }
+
+    @Override
+    public boolean canMakeAnyMove(int fromQ, int fromR, Hive.Player player) {
+        HashMap<String, int[]> coordinates = Board.getBoardInstance().getNeighbouringCoordinates(fromQ,fromR);
+        for(String directions: coordinates.keySet()) {
+            int[] coordinate = coordinates.get(directions);
+            if(Board.getBoardInstance().getSizeAtPosition(coordinate[0],coordinate[1]) == 0) {
+                if(GenericMoveHandler.getGenericMoveHandler().canSlideTile(fromQ,fromR,coordinate[0],coordinate[1])) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

@@ -16,7 +16,7 @@ public class Board {
     }
 
     public void resetBoard() {
-        this.gameBoard = new HashMap<>();
+        instance = null;
     }
 
     private Board() {}
@@ -35,7 +35,14 @@ public class Board {
 
     public int getSizeAtPosition(int q, int r) {
         try {
-            return gameBoard.get(q).get(r).size();
+            Stack<Tile> result = gameBoard.get(q).get(r);
+            int tileCount = 0;
+            for(Tile tile: result) {
+                if(tile != null) {
+                    tileCount++;
+                }
+            }
+            return tileCount;
         } catch (NullPointerException ex) {
             return 0;
         }
@@ -52,7 +59,7 @@ public class Board {
     public Tile removeTopTileAtPosition(int q, int r) {
         try {
             Tile tile = gameBoard.get(q).get(r).pop();
-            if (gameBoard.get(q).get(r).isEmpty()) {
+            if (gameBoard.get(q).get(r).size() == 0) {
                 gameBoard.get(q).put(r,null);
             }
             return tile;
@@ -138,13 +145,6 @@ public class Board {
         return neighboursSizeList;
     }
 
-//    protected void peekAtNeighbours(int q, int r) {
-//        HashMap<String, int[]> coordinates = getNeighbouringCoordinates(q,r);
-//        for(String direction: coordinates.keySet()) {
-//            peekAtPosition(coordinates.get(direction)[0],coordinates.get(direction)[1]);
-//        }
-//    }
-//
     private void peekAtPosition(int q, int r) {
         if (gameBoard.get(q) == null) {
             gameBoard.put(q,new HashMap<Integer, Stack<Tile>>());
