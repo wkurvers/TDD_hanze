@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="handlers.AntMoveHandlerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2019-11-11T17:55:46" hostname="jelmer-Aspire-V5-591G" time="0.002">
-  <properties/>
-  <testcase name="testAntCanMakeAnyMove()" classname="handlers.AntMoveHandlerTest" time="0.001"/>
-  <testcase name="testAntCanNotMakeAnyMove()" classname="handlers.AntMoveHandlerTest" time="0.001"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>

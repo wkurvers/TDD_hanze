@@ -2,20 +2,18 @@ package handlers;
 
 import game.Board;
 import game.Hive;
+import game.HiveGame;
 
 import java.util.HashMap;
 
 public class BeetleMoveHandler implements CreatureMoveHandler {
-    private static BeetleMoveHandler instance;
+    private HiveGame game;
 
-    public static BeetleMoveHandler getInstance() {
-        if (instance == null) {
-            instance = new BeetleMoveHandler();
-        }
-        return instance;
+    public BeetleMoveHandler() {}
+
+    public void setGame(HiveGame game) {
+        this.game = game;
     }
-
-    private BeetleMoveHandler() { }
 
     @Override
     public boolean isValidMove(int fromQ, int fromR, int toQ, int toR) {

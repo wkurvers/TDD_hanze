@@ -9,30 +9,26 @@ import java.util.HashMap;
 public class HiveGame implements Hive {
     private Player currentPlayer;
     private Player opponent;
-    private static HiveGame instance;
+    private Board gameBoard;
+    private PlaceHandler placeHandler;
+    private GenericMoveHandler genericMoveHandler;
 
-
-    public static HiveGame getGame(){
-        if (instance == null) {
-            instance = new HiveGame();
-        }
-        return instance;
-    }
-
-    public void resetGame() {
-        instance = null;
-        PlaceHandler.getPlaceHandler().reset();
-        GenericMoveHandler.getGenericMoveHandler().resetMoveHandler();
-        Board.getBoardInstance().resetBoard();
-    }
-    private HiveGame() {
+    public HiveGame() {
         currentPlayer = Player.WHITE;
         opponent = Player.BLACK;
+        gameBoard = new Board();
+        placeHandler = new PlaceHandler();
+        placeHandler.setGame(this);
+
+        genericMoveHandler = new GenericMoveHandler();
+        genericMoveHandler.setGame(this);
     }
 
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
+
+    public Board getCurrentBoard() { return gameBoard; }
 
     public void switchPlayer() {
         if (currentPlayer == Player.WHITE) {
@@ -44,10 +40,13 @@ public class HiveGame implements Hive {
         }
     }
 
+//    public void updateGame() {
+//        placeHandler.setGame(this);
+//    }
+
     @Override
     public void play(Tile tile, int q, int r) throws IllegalMove {
         creatures.Tile tileToPlace = TileFactory.makeTile(tile,currentPlayer);
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
         placeHandler.playTile(tileToPlace,q,r);
         switchPlayer();
     }
@@ -57,7 +56,7 @@ public class HiveGame implements Hive {
     @Override
     public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
         GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        creatures.Tile tileToMove = Board.getBoardInstance().getTopTileAtPosition(fromQ,fromR);
+        creatures.Tile tileToMove = this.gameBoard.getTopTileAtPosition(fromQ,fromR);
         HashMap<String, Integer> goal = new HashMap<>();
         goal.put("q",toQ);
         goal.put("r",toR);
@@ -86,7 +85,7 @@ public class HiveGame implements Hive {
 
     @Override
     public void pass() throws IllegalMove {
-        if(GenericMoveHandler.getGenericMoveHandler().canMakeAnyMove(currentPlayer) && PlaceHandler.getPlaceHandler().hasTilesToPlay(currentPlayer)) {
+        if(GenericMoveHandler.getGenericMoveHandler().canMakeAnyMove(currentPlayer) && placeHandler.hasTilesToPlay(currentPlayer)) {
             throw new IllegalMove("This player can still make a move");
         } else {
             switchPlayer();
@@ -95,12 +94,10 @@ public class HiveGame implements Hive {
 
     @Override
     public boolean isWinner(Player player) {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
-        Board board = Board.getBoardInstance();
         if(placeHandler.checkHasPlayedQueen(opponent)) {
             HashMap<String, Integer> queenLocation = placeHandler.getQueenLocation(opponent);
 
-            ArrayList<creatures.Tile> neighbours = board.getNeighbours(queenLocation.get("q"),queenLocation.get("r"));
+            ArrayList<creatures.Tile> neighbours = this.gameBoard.getNeighbours(queenLocation.get("q"),queenLocation.get("r"));
             for(creatures.Tile tile: neighbours) {
                 if (tile==null) {
                     return false;

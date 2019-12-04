@@ -5,21 +5,11 @@ import creatures.Tile;
 import java.util.*;
 
 public class Board {
-    private HashMap<Integer, HashMap<Integer, Stack<Tile>>> gameBoard = new HashMap<>();
-    private static Board instance;
+    private HashMap<Integer, HashMap<Integer, Stack<Tile>>> gameBoard;
 
-    public static Board getBoardInstance() {
-        if (instance == null) {
-            instance = new Board();
-        }
-        return instance;
+    public Board() {
+        gameBoard = new HashMap<>();
     }
-
-    public void resetBoard() {
-        instance = null;
-    }
-
-    private Board() {}
 
     public HashMap<Integer, HashMap<Integer, Stack<Tile>>> getBoard() {
         return gameBoard;
@@ -171,8 +161,8 @@ public class Board {
     }
 
     public ArrayList<Integer[]> getCommonNeighbours(int fromQ, int fromR, int toQ, int toR) {
-        Collection<int[]> valuesA = Board.getBoardInstance().getNeighbouringCoordinates(fromQ, fromR).values();
-        Collection<int[]> valuesB = Board.getBoardInstance().getNeighbouringCoordinates(toQ, toR).values();
+        Collection<int[]> valuesA = this.getNeighbouringCoordinates(fromQ, fromR).values();
+        Collection<int[]> valuesB = this.getNeighbouringCoordinates(toQ, toR).values();
         ArrayList<Integer[]> neighboursA = convertCoordinatesArray(valuesA);
         ArrayList<Integer[]> neighboursB = convertCoordinatesArray(valuesB);
         ArrayList<Integer[]> commonNeighbours = new ArrayList<>();

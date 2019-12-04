@@ -1,30 +1,33 @@
 package handlers;
 
 import creatures.Tile;
-import game.Board;
 import game.Hive;
+import game.HiveGame;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class AntMoveHandler implements CreatureMoveHandler {
-    private static AntMoveHandler instance;
+    private HiveGame game;
+    private GenericMoveHandler moveHandler;
+    public AntMoveHandler() {
 
-    public static AntMoveHandler getInstance() {
-        if (instance == null) {
-            instance = new AntMoveHandler();
-        }
-        return instance;
     }
 
-    private AntMoveHandler() { }
+    public void setGame(HiveGame game) {
+        this.game = game;
+    }
+
+    public void setMoveHandler(GenericMoveHandler moveHandler) {
+        this.moveHandler = moveHandler;
+    }
 
     @Override
     public boolean isValidMove(int fromQ, int fromR, int toQ, int toR) {
-        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
+        Tile tile = game.getCurrentBoard().removeTopTileAtPosition(fromQ,fromR);
         boolean hasContact = hasContact(toQ,toR);
         boolean isEmptySpot = isEmptySpot(toQ,toR);
-        Board.getBoardInstance().placeTileAtPosition(fromQ,fromR,tile);
+        game.getCurrentBoard().placeTileAtPosition(fromQ,fromR,tile);
         return hasContact && isEmptySpot;
     }
 
@@ -34,8 +37,7 @@ public class AntMoveHandler implements CreatureMoveHandler {
     }
 
     private boolean hasContact(int toQ, int toR) {
-        Board gameBoard = Board.getBoardInstance();
-        ArrayList<Tile> neighbours = gameBoard.getNeighbours(toQ, toR);
+        ArrayList<Tile> neighbours = game.getCurrentBoard().getNeighbours(toQ, toR);
         for (Tile tile : neighbours) {
             if (tile != null) {
                 return true;
@@ -45,16 +47,16 @@ public class AntMoveHandler implements CreatureMoveHandler {
     }
 
     private boolean isEmptySpot(int toQ, int toR) {
-        return Board.getBoardInstance().getSizeAtPosition(toQ,toR) == 0;
+        return game.getCurrentBoard().getSizeAtPosition(toQ,toR) == 0;
     }
 
     @Override
     public boolean canMakeAnyMove(int fromQ, int fromR, Hive.Player player) {
-        HashMap<String, int[]> coordinates = Board.getBoardInstance().getNeighbouringCoordinates(fromQ,fromR);
+        HashMap<String, int[]> coordinates = game.getCurrentBoard().getNeighbouringCoordinates(fromQ,fromR);
         for(String directions: coordinates.keySet()) {
             int[] coordinate = coordinates.get(directions);
-            if(Board.getBoardInstance().getSizeAtPosition(coordinate[0],coordinate[1]) == 0) {
-                if(GenericMoveHandler.getGenericMoveHandler().canSlideTile(fromQ,fromR,coordinate[0],coordinate[1])) {
+            if(game.getCurrentBoard().getSizeAtPosition(coordinate[0],coordinate[1]) == 0) {
+                if(moveHandler.canSlideTile(fromQ,fromR,coordinate[0],coordinate[1])) {
                     return true;
                 }
             }

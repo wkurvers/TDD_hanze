@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="handlers.SpiderMoveHandlerTest" tests="2" skipped="0" failures="0" errors="0" timestamp="2019-11-11T17:55:46" hostname="jelmer-Aspire-V5-591G" time="0.216">
-  <properties/>
-  <testcase name="testSpiderCanNotMakeAnyMove()" classname="handlers.SpiderMoveHandlerTest" time="0.079"/>
-  <testcase name="testSpiderCanMakeAnyMove()" classname="handlers.SpiderMoveHandlerTest" time="0.136"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
