@@ -2,24 +2,29 @@ package handlers;
 
 import game.Board;
 import game.Hive;
+import game.HiveGame;
 
 import java.util.HashMap;
 
 public class QueenBeeMoveHandler implements CreatureMoveHandler {
-    private static QueenBeeMoveHandler instance;
+    private HiveGame game;
+    private GenericMoveHandler moveHandler;
 
-    public static QueenBeeMoveHandler getInstance() {
-        if (instance == null) {
-            instance = new QueenBeeMoveHandler();
-        }
-        return instance;
+    public QueenBeeMoveHandler() {
+
     }
 
-    private QueenBeeMoveHandler() { }
+    public void setGame(HiveGame game) {
+        this.game = game;
+    }
+
+    public void setMoveHandler(GenericMoveHandler moveHandler) {
+        this.moveHandler = moveHandler;
+    }
 
     @Override
     public boolean isValidMove(int fromQ, int fromR, int toQ, int toR) {
-        return Board.getBoardInstance().getSizeAtPosition(toQ,toR) == 0;
+        return this.game.getCurrentBoard().getSizeAtPosition(toQ,toR) == 0;
     }
 
     @Override
@@ -29,11 +34,11 @@ public class QueenBeeMoveHandler implements CreatureMoveHandler {
 
     @Override
     public boolean canMakeAnyMove(int fromQ, int fromR, Hive.Player player) {
-        HashMap<String, int[]> coordinates = Board.getBoardInstance().getNeighbouringCoordinates(fromQ,fromR);
+        HashMap<String, int[]> coordinates = this.game.getCurrentBoard().getNeighbouringCoordinates(fromQ,fromR);
         for(String directions: coordinates.keySet()) {
             int[] coordinate = coordinates.get(directions);
-            if(Board.getBoardInstance().getSizeAtPosition(coordinate[0],coordinate[1]) == 0) {
-                if(GenericMoveHandler.getGenericMoveHandler().canSlideTile(fromQ,fromR,coordinate[0],coordinate[1])) {
+            if(this.game.getCurrentBoard().getSizeAtPosition(coordinate[0],coordinate[1]) == 0) {
+                if(this.moveHandler.canSlideTile(fromQ,fromR,coordinate[0],coordinate[1])) {
                     return true;
                 }
             }

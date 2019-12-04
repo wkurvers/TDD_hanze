@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="handlers.PlaceHandlerTest" tests="10" skipped="0" failures="0" errors="0" timestamp="2019-12-04T13:43:47" hostname="jelmer-Aspire-V5-591G" time="0.014">
+  <properties/>
+  <testcase name="testCanPlayerPlayTileIfNoTileLeftToPlay()" classname="handlers.PlaceHandlerTest" time="0.001"/>
+  <testcase name="testCanPlayTileWithoutContact()" classname="handlers.PlaceHandlerTest" time="0.001"/>
+  <testcase name="testCanPlayerPlayTileIfTileLeftToPlay()" classname="handlers.PlaceHandlerTest" time="0.0"/>
+  <testcase name="testCanPlayTileWithOpponentContact()" classname="handlers.PlaceHandlerTest" time="0.001"/>
+  <testcase name="testCheckIsLocationEmptyWhenNotEmpty()" classname="handlers.PlaceHandlerTest" time="0.0"/>
+  <testcase name="checkMustPlayQueenIfQueenHasNotBeenPlayed()" classname="handlers.PlaceHandlerTest" time="0.001"/>
+  <testcase name="testCanPlayTileWithoutOpponentContact()" classname="handlers.PlaceHandlerTest" time="0.001"/>
+  <testcase name="testCheckIsLocationEmptyWhenEmpty()" classname="handlers.PlaceHandlerTest" time="0.0"/>
+  <testcase name="testCanPlayTileWithContact()" classname="handlers.PlaceHandlerTest" time="0.0"/>
+  <testcase name="checkMustPlayedQueenWhenQueenHasBeenPlayed()" classname="handlers.PlaceHandlerTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

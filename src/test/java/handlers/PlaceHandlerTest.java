@@ -3,6 +3,7 @@ package handlers;
 import creatures.Tile;
 import game.Board;
 import game.Hive;
+import game.HiveGame;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,36 +11,35 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlaceHandlerTest {
-
-    @AfterEach
+    private HiveGame game;
+    @BeforeEach
     void resetHandler() {
-        PlaceHandler.getPlaceHandler().reset();
-        Board.getBoardInstance().resetBoard();
+        game = new HiveGame();
     }
 
     @Test
     void testCanPlayerPlayTileIfTileLeftToPlay() {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         assertTrue(placeHandler.canPlayerPlayTile(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE));
     }
 
     @Test
     void testCanPlayerPlayTileIfNoTileLeftToPlay() {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         placeHandler.removeTileFromTilesToPlay(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE);
         assertFalse(placeHandler.canPlayerPlayTile(Hive.Player.WHITE, Hive.Tile.QUEEN_BEE));
     }
 
     @Test
     void testCheckIsLocationEmptyWhenEmpty() {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         assertTrue(placeHandler.checkLocationEmpty(0,0));
     }
 
     @Test
     void testCheckIsLocationEmptyWhenNotEmpty() {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
-        Board gameBoard = Board.getBoardInstance();
+        PlaceHandler placeHandler = game.getPlaceHandler();
+        Board gameBoard = game.getCurrentBoard();
         Tile tileToPlace = new Tile();
         gameBoard.placeTileAtPosition(0,0,tileToPlace);
         assertFalse(placeHandler.checkLocationEmpty(0,0));
@@ -47,14 +47,14 @@ class PlaceHandlerTest {
 
     @Test
     void testCanPlayTileWithoutContact() {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         assertFalse(placeHandler.checkContactExists(0,0));
     }
 
     @Test
     void testCanPlayTileWithContact() {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
-        Board gameBoard = Board.getBoardInstance();
+        PlaceHandler placeHandler = game.getPlaceHandler();
+        Board gameBoard = game.getCurrentBoard();
         Tile tileToPlace = new Tile();
         tileToPlace.setPlayedByPlayer(Hive.Player.WHITE);
         gameBoard.placeTileAtPosition(0,0,tileToPlace);
@@ -63,7 +63,7 @@ class PlaceHandlerTest {
 
     @Test
     void testCanPlayTileWithOpponentContact() {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tileToPlace = new Tile();
         tileToPlace.setPlayedByPlayer(Hive.Player.BLACK);
         assertFalse(placeHandler.isNotOpponent(tileToPlace));
@@ -71,7 +71,7 @@ class PlaceHandlerTest {
 
     @Test
     void testCanPlayTileWithoutOpponentContact() {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tileToPlace = new Tile();
         tileToPlace.setPlayedByPlayer(Hive.Player.WHITE);
         assertTrue(placeHandler.isNotOpponent(tileToPlace));
@@ -79,7 +79,7 @@ class PlaceHandlerTest {
 
     @Test
     void checkMustPlayQueenIfQueenHasNotBeenPlayed() {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tileToPlace = new Tile();
         tileToPlace.setPlayedByPlayer(Hive.Player.WHITE);
         tileToPlace.setCreature(Hive.Tile.GRASSHOPPER);
@@ -91,7 +91,7 @@ class PlaceHandlerTest {
 
     @Test
     void checkMustPlayedQueenWhenQueenHasBeenPlayed() {
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tileToPlace = new Tile();
         tileToPlace.setPlayedByPlayer(Hive.Player.WHITE);
         tileToPlace.setCreature(Hive.Tile.GRASSHOPPER);

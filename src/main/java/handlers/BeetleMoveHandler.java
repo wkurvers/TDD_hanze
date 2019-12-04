@@ -8,11 +8,16 @@ import java.util.HashMap;
 
 public class BeetleMoveHandler implements CreatureMoveHandler {
     private HiveGame game;
+    private GenericMoveHandler moveHandler;
 
     public BeetleMoveHandler() {}
 
     public void setGame(HiveGame game) {
         this.game = game;
+    }
+
+    public void setMoveHandler(GenericMoveHandler moveHandler) {
+        this.moveHandler = moveHandler;
     }
 
     @Override

@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="game.HiveGameTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2019-12-03T11:44:46" hostname="jelmer-Aspire-V5-591G" time="0.176">
+<testsuite name="game.HiveGameTest" tests="19" skipped="0" failures="0" errors="0" timestamp="2019-12-04T13:43:47" hostname="jelmer-Aspire-V5-591G" time="0.177">
   <properties/>
-  <testcase name="testValidGrasshopperMove()" classname="game.HiveGameTest" time="0.039"/>
-  <testcase name="testValidSoldierAntSlide()" classname="game.HiveGameTest" time="0.04"/>
+  <testcase name="testValidGrasshopperMove()" classname="game.HiveGameTest" time="0.026"/>
+  <testcase name="testValidSoldierAntSlide()" classname="game.HiveGameTest" time="0.041"/>
   <testcase name="testValidQueenSlide()" classname="game.HiveGameTest" time="0.003"/>
-  <testcase name="testBlackCanPlayTileNextToOpponentAfterFirstMove()" classname="game.HiveGameTest" time="0.002"/>
+  <testcase name="testBlackCanPlayTileNextToOpponentAfterFirstMove()" classname="game.HiveGameTest" time="0.001"/>
   <testcase name="testWhiteCanNotPlayTileNextToOpponentAfterTwoMoves()" classname="game.HiveGameTest" time="0.002"/>
-  <testcase name="testBlackCanMoveWhenValidMove()" classname="game.HiveGameTest" time="0.016"/>
+  <testcase name="testBlackCanMoveWhenValidMove()" classname="game.HiveGameTest" time="0.021"/>
   <testcase name="testInvalidQueenSlide()" classname="game.HiveGameTest" time="0.002"/>
-  <testcase name="testValidSpiderSlide()" classname="game.HiveGameTest" time="0.008"/>
+  <testcase name="testValidSpiderSlide()" classname="game.HiveGameTest" time="0.006"/>
   <testcase name="testBlackCannotMoveWhenInvalidMove()" classname="game.HiveGameTest" time="0.002"/>
   <testcase name="testCanPlayTile()" classname="game.HiveGameTest" time="0.002"/>
   <testcase name="testWhiteWinsWhenShouldNotWin()" classname="game.HiveGameTest" time="0.001"/>
-  <testcase name="testInvalidSpiderSlide()" classname="game.HiveGameTest" time="0.007"/>
-  <testcase name="testValidBeetleSlide()" classname="game.HiveGameTest" time="0.003"/>
-  <testcase name="testSwitchPlayerToBlackAfterFirstMove()" classname="game.HiveGameTest" time="0.001"/>
+  <testcase name="testInvalidSpiderSlide()" classname="game.HiveGameTest" time="0.005"/>
+  <testcase name="testValidBeetleSlide()" classname="game.HiveGameTest" time="0.002"/>
+  <testcase name="testSwitchPlayerToBlackAfterFirstMove()" classname="game.HiveGameTest" time="0.0"/>
   <testcase name="testWhiteWinsWhenShouldWin()" classname="game.HiveGameTest" time="0.001"/>
-  <testcase name="testInvalidBeetleSlide()" classname="game.HiveGameTest" time="0.002"/>
+  <testcase name="testInvalidBeetleSlide()" classname="game.HiveGameTest" time="0.003"/>
   <testcase name="testInvalidGrasshopperMove()" classname="game.HiveGameTest" time="0.002"/>
   <testcase name="testFirstPlayerIsWhite()" classname="game.HiveGameTest" time="0.0"/>
-  <testcase name="testInvalidSoldierAntSlide()" classname="game.HiveGameTest" time="0.028"/>
+  <testcase name="testInvalidSoldierAntSlide()" classname="game.HiveGameTest" time="0.042"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

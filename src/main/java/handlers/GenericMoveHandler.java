@@ -21,7 +21,20 @@ public class GenericMoveHandler {
     private PlaceHandler placeHandler;
 
     public GenericMoveHandler() {
+        this.antMoveHandler = new AntMoveHandler();
+        this.antMoveHandler.setMoveHandler(this);
 
+        this.grasshopperMoveHandler = new GrasshopperMoveHandler();
+        this.grasshopperMoveHandler.setMoveHandler(this);
+
+        this.queenBeeMoveHandler = new QueenBeeMoveHandler();
+        this.queenBeeMoveHandler.setMoveHandler(this);
+
+        this.spiderMoveHandler = new SpiderMoveHandler();
+        this.spiderMoveHandler.setMoveHandler(this);
+
+        this.beetleMoveHandler = new BeetleMoveHandler();
+        this.beetleMoveHandler.setMoveHandler(this);
     }
 
     public void setGame(HiveGame game) {
@@ -37,29 +50,24 @@ public class GenericMoveHandler {
         this.placeHandler = placeHandler;
     }
 
-    public void setAntMoveHandler(AntMoveHandler antMoveHandler) {
-        this.antMoveHandler = antMoveHandler;
-        this.antMoveHandler.setMoveHandler(this);
+    public AntMoveHandler getAntMoveHandler() {
+        return antMoveHandler;
     }
 
-    public void setGrasshopperMoveHandler(GrasshopperMoveHandler grasshopperMoveHandler) {
-        this.grasshopperMoveHandler = grasshopperMoveHandler;
-        this.grasshopperMoveHandler.setMoveHandler(this);
+    public GrasshopperMoveHandler getGrasshopperMoveHandler() {
+        return grasshopperMoveHandler;
     }
 
-    public void setQueenBeeMoveHandler(QueenBeeMoveHandler queenBeeMoveHandler) {
-        this.queenBeeMoveHandler = queenBeeMoveHandler;
-        this.queenBeeMoveHandler.setMoveHandler(this);
+    public QueenBeeMoveHandler getQueenBeeMoveHandler() {
+        return queenBeeMoveHandler;
     }
 
-    public void setSpiderMoveHandler(SpiderMoveHandler spiderMoveHandler) {
-        this.spiderMoveHandler = spiderMoveHandler;
-        this.spiderMoveHandler.setMoveHandler(this);
+    public SpiderMoveHandler getSpiderMoveHandler() {
+        return spiderMoveHandler;
     }
 
-    public void setBeetleMoveHandler(BeetleMoveHandler beetleMoveHandler) {
-        this.beetleMoveHandler = beetleMoveHandler;
-        this.beetleMoveHandler.setMoveHandler(this);
+    public BeetleMoveHandler getBeetleMoveHandler() {
+        return beetleMoveHandler;
     }
 
     protected boolean validCreatureSpecific(Tile tileToMove, int fromQ, int fromR, int toQ, int toR) throws Hive.IllegalMove {

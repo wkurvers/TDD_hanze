@@ -15,35 +15,35 @@ import java.util.Stack;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class GenericMoveHandlerTest {
-
-    @AfterEach
+    private HiveGame game;
+    @BeforeEach
     void resetHandler() {
-        HiveGame.getGame().resetGame();
+        game = new HiveGame();
     }
 
     @Test
     void testCanMoveATile() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
         Tile tileToPlace = new Tile();
-        PlaceHandler.getPlaceHandler().playTileTest(Hive.Player.WHITE,tileToPlace,0,0);
-        int oldStackSizeBefore = Board.getBoardInstance().getPosition(0,0).size();
+        game.getPlaceHandler().playTileTest(Hive.Player.WHITE,tileToPlace,0,0);
+        int oldStackSizeBefore = game.getCurrentBoard().getPosition(0,0).size();
 
         int newStackSizeBefore;
-        if (Board.getBoardInstance().getPosition(-1,0) == null) {
+        if (game.getCurrentBoard().getPosition(-1,0) == null) {
             newStackSizeBefore = 0;
         } else {
-            newStackSizeBefore = Board.getBoardInstance().getPosition(-1,0).size();
+            newStackSizeBefore = game.getCurrentBoard().getPosition(-1,0).size();
         }
 
         genericMoveHandler.moveTileTest(0,0,-1,0);
         int oldStackSizeAfter;
-        if (Board.getBoardInstance().getPosition(0,0) == null) {
+        if (game.getCurrentBoard().getPosition(0,0) == null) {
             oldStackSizeAfter = 0;
         } else {
-            oldStackSizeAfter = Board.getBoardInstance().getPosition(0,0).size();
+            oldStackSizeAfter = game.getCurrentBoard().getPosition(0,0).size();
         }
 
-        int newStackSizeAfter = Board.getBoardInstance().getPosition(-1,0).size();
+        int newStackSizeAfter = game.getCurrentBoard().getPosition(-1,0).size();
 
         boolean movedFromOldPlace = oldStackSizeAfter == oldStackSizeBefore - 1;
         boolean movedToNewPlace = newStackSizeBefore + 1 == newStackSizeAfter;
@@ -52,31 +52,31 @@ public class GenericMoveHandlerTest {
     }
 
     void moveATile() throws Hive.IllegalMove {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
         genericMoveHandler.moveTileTestNoTile(0,0,-1,1, Hive.Player.WHITE);
     }
 
     void blackMovesWhiteTile() throws Hive.IllegalMove {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
         Tile tileToPlace = new Tile();
         tileToPlace.setPlayedByPlayer(Hive.Player.WHITE);
-        PlaceHandler.getPlaceHandler().playTileTest(Hive.Player.WHITE,tileToPlace,0,0);
+        game.getPlaceHandler().playTileTest(Hive.Player.WHITE,tileToPlace,0,0);
         genericMoveHandler.moveTileTestWrongPlayer(0,0,-1,1, Hive.Player.BLACK);
     }
 
     void moveTileWhenQueenNotPlaced() throws Hive.IllegalMove {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
         Tile tileToPlace = new Tile();
         tileToPlace.setPlayedByPlayer(Hive.Player.WHITE);
-        PlaceHandler.getPlaceHandler().playTileTest(Hive.Player.WHITE,tileToPlace,0,0);
+        game.getPlaceHandler().playTileTest(Hive.Player.WHITE,tileToPlace,0,0);
         genericMoveHandler.moveTileTestNoQueen(0,0,-1,1, Hive.Player.WHITE);
     }
 
     void moveTileToNoContactLocation() throws Hive.IllegalMove {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
         Tile tileToPlace = new Tile();
         tileToPlace.setPlayedByPlayer(Hive.Player.WHITE);
-        PlaceHandler.getPlaceHandler().playTileTest(Hive.Player.WHITE,tileToPlace,0,0);
+        game.getPlaceHandler().playTileTest(Hive.Player.WHITE,tileToPlace,0,0);
         genericMoveHandler.moveTileTestContact(0,0,-1,1, Hive.Player.WHITE);
     }
     @Test
@@ -101,8 +101,8 @@ public class GenericMoveHandlerTest {
 
     @Test
     void testBfsTileCountSearch() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile queenBeeTile = new Tile();
         queenBeeTile.setPlayedByPlayer(Hive.Player.WHITE);
         queenBeeTile.setCreature(Hive.Tile.QUEEN_BEE);
@@ -120,8 +120,8 @@ public class GenericMoveHandlerTest {
 
     @Test
     void testNoIslandExistsWhenDont() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile queenBeeTile = new Tile();
         queenBeeTile.setPlayedByPlayer(Hive.Player.WHITE);
         queenBeeTile.setCreature(Hive.Tile.QUEEN_BEE);
@@ -145,8 +145,8 @@ public class GenericMoveHandlerTest {
 
     @Test
     void testNoIslandExistsWhenDo() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile queenBeeTile = new Tile();
         queenBeeTile.setPlayedByPlayer(Hive.Player.WHITE);
         queenBeeTile.setCreature(Hive.Tile.QUEEN_BEE);
@@ -170,18 +170,18 @@ public class GenericMoveHandlerTest {
 
     @Test
     void testSlideIsOneMove() {
-        assertTrue(GenericMoveHandler.getGenericMoveHandler().checkSlideDistanceIsOne(0,2,-1,2));
+        assertTrue(game.getGenericMoveHandler().checkSlideDistanceIsOne(0,2,-1,2));
     }
 
     @Test
     void testSlideIsBiggerThenOneMove() {
-        assertFalse(GenericMoveHandler.getGenericMoveHandler().checkSlideDistanceIsOne(0,2,-2,2));
+        assertFalse(game.getGenericMoveHandler().checkSlideDistanceIsOne(0,2,-2,2));
     }
 
     @Test
     void testSlideWhenDirectionBlocked() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tile = new Tile();
         tile.setPlayedByPlayer(Hive.Player.WHITE);
         tile.setCreature(Hive.Tile.SOLDIER_ANT);
@@ -198,8 +198,8 @@ public class GenericMoveHandlerTest {
 
     @Test
     void testSlideWhenDirectionNotBlocked() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tile = new Tile();
         tile.setPlayedByPlayer(Hive.Player.WHITE);
         tile.setCreature(Hive.Tile.SOLDIER_ANT);
@@ -214,8 +214,8 @@ public class GenericMoveHandlerTest {
 
     @Test
     void testSlideWhenLoseContact() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tile = new Tile();
         tile.setPlayedByPlayer(Hive.Player.WHITE);
         tile.setCreature(Hive.Tile.SOLDIER_ANT);
@@ -226,14 +226,14 @@ public class GenericMoveHandlerTest {
         placeHandler.playTileTest(Hive.Player.WHITE,tile,0,1);
         placeHandler.playTileTest(Hive.Player.WHITE,tile,-2,1);
         placeHandler.playTileTest(Hive.Player.WHITE,tile,-2,2);
-        Tile tile2 = Board.getBoardInstance().removeTopTileAtPosition(-2,2);
+        Tile tile2 = game.getCurrentBoard().removeTopTileAtPosition(-2,2);
         assertFalse(genericMoveHandler.checkWhileSlidingKeepContact(-2,2,-1,2));
     }
 
     @Test
     void testSlideWhenKeepContact() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tile1 = new Tile();
         Tile tile2 = new Tile();
         Tile tile3 = new Tile();
@@ -265,15 +265,15 @@ public class GenericMoveHandlerTest {
         placeHandler.playTileTest(Hive.Player.WHITE,tile4,-1,1);
         placeHandler.playTileTest(Hive.Player.WHITE,tile5,-2,1);
         placeHandler.playTileTest(Hive.Player.WHITE,tile6,-2,2);
-        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(-2,2);
+        Tile tile = game.getCurrentBoard().removeTopTileAtPosition(-2,2);
         assertTrue(genericMoveHandler.checkWhileSlidingKeepContact(-2,2,-1,2));
     }
 
 
     @Test
     void testValidSlideAnt() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tile = new Tile();
         tile.setCreature(Hive.Tile.SOLDIER_ANT);
         tile.setPlayedByPlayer(Hive.Player.WHITE);
@@ -292,8 +292,8 @@ public class GenericMoveHandlerTest {
 
     @Test
     void testInvalidSlideAnt() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tile = new Tile();
         tile.setCreature(Hive.Tile.SOLDIER_ANT);
         tile.setPlayedByPlayer(Hive.Player.WHITE);
@@ -313,8 +313,8 @@ public class GenericMoveHandlerTest {
 
     @Test
     void testValidSlideSpider() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tile = new Tile();
         tile.setCreature(Hive.Tile.SPIDER);
         tile.setPlayedByPlayer(Hive.Player.WHITE);
@@ -338,8 +338,8 @@ public class GenericMoveHandlerTest {
 
     @Test
     void testInvalidSlideSpider() {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
-        PlaceHandler placeHandler = PlaceHandler.getPlaceHandler();
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        PlaceHandler placeHandler = game.getPlaceHandler();
         Tile tile = new Tile();
         tile.setCreature(Hive.Tile.SPIDER);
         tile.setPlayedByPlayer(Hive.Player.WHITE);

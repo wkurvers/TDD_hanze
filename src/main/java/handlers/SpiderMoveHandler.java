@@ -3,6 +3,7 @@ package handlers;
 import creatures.Tile;
 import game.Board;
 import game.Hive;
+import game.HiveGame;
 
 import java.util.ArrayList;
 import java.util.Deque;
@@ -10,16 +11,18 @@ import java.util.HashMap;
 import java.util.Stack;
 
 public class SpiderMoveHandler implements CreatureMoveHandler {
-    private static SpiderMoveHandler instance;
+    private HiveGame game;
+    private GenericMoveHandler moveHandler;
 
-    public static SpiderMoveHandler getInstance() {
-        if (instance == null) {
-            instance = new SpiderMoveHandler();
-        }
-        return instance;
+    public SpiderMoveHandler() {}
+
+    public void setGame(HiveGame game) {
+        this.game = game;
     }
 
-    private SpiderMoveHandler() { }
+    public void setMoveHandler(GenericMoveHandler moveHandler) {
+        this.moveHandler = moveHandler;
+    }
 
     @Override
     public boolean canMakeAnyMove(int fromQ, int fromR, Hive.Player player) {
@@ -31,10 +34,10 @@ public class SpiderMoveHandler implements CreatureMoveHandler {
                 HashMap<String, Integer> goal = new HashMap<>();
                 goal.put("q",location[0]);
                 goal.put("r",location[1]);
-                validPaths = GenericMoveHandler.getGenericMoveHandler().findPathToLocation(fromQ,fromR,player, Hive.Tile.SPIDER,null,goal,0,3);
-                GenericMoveHandler.getGenericMoveHandler().tryMakeSlidingMove(validPaths,player);
-                Tile tile = Board.getBoardInstance().removeTopTileAtPosition(location[0],location[1]);
-                Board.getBoardInstance().placeTileAtPosition(fromQ,fromR,tile);
+                validPaths = this.moveHandler.findPathToLocation(fromQ,fromR,player, Hive.Tile.SPIDER,null,goal,0,3);
+                this.moveHandler.tryMakeSlidingMove(validPaths,player);
+                Tile tile = this.game.getCurrentBoard().removeTopTileAtPosition(location[0],location[1]);
+                this.game.getCurrentBoard().placeTileAtPosition(fromQ,fromR,tile);
             } catch (Hive.IllegalMove ex) {
                 exceptionCount++;
             }
@@ -57,10 +60,10 @@ public class SpiderMoveHandler implements CreatureMoveHandler {
 
     @Override
     public boolean isValidMove(int fromQ, int fromR, int toQ, int toR) {
-        Tile tile = Board.getBoardInstance().removeTopTileAtPosition(fromQ,fromR);
+        Tile tile = this.game.getCurrentBoard().removeTopTileAtPosition(fromQ,fromR);
         boolean hasContact = hasContact(toQ,toR);
         boolean isEmptySpot = isEmptySpot(toQ,toR);
-        Board.getBoardInstance().placeTileAtPosition(fromQ,fromR,tile);
+        this.game.getCurrentBoard().placeTileAtPosition(fromQ,fromR,tile);
         return hasContact && isEmptySpot;
     }
 
@@ -70,8 +73,7 @@ public class SpiderMoveHandler implements CreatureMoveHandler {
     }
 
     private boolean hasContact(int toQ, int toR) {
-        Board gameBoard = Board.getBoardInstance();
-        ArrayList<Tile> neighbours = gameBoard.getNeighbours(toQ, toR);
+        ArrayList<Tile> neighbours = this.game.getCurrentBoard().getNeighbours(toQ, toR);
         for (Tile tile : neighbours) {
             if (tile != null) {
                 return true;
@@ -81,6 +83,6 @@ public class SpiderMoveHandler implements CreatureMoveHandler {
     }
 
     private boolean isEmptySpot(int toQ, int toR) {
-        return Board.getBoardInstance().getSizeAtPosition(toQ,toR) == 0;
+        return this.game.getCurrentBoard().getSizeAtPosition(toQ,toR) == 0;
     }
 }

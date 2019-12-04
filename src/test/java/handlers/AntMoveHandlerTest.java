@@ -5,15 +5,17 @@ import game.Board;
 import game.Hive;
 import game.HiveGame;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AntMoveHandlerTest {
-    @AfterEach
+    private HiveGame game;
+    @BeforeEach
     void resetHandler() {
-        HiveGame.getGame().resetGame();
+        game = new HiveGame();
     }
     @Test
     void testAntCanNotMakeAnyMove() {
@@ -24,27 +26,27 @@ public class AntMoveHandlerTest {
         Tile otherTile = new Tile();
         otherTile.setPlayedByPlayer(Hive.Player.BLACK);
         otherTile.setCreature(Hive.Tile.SOLDIER_ANT);
-        Board.getBoardInstance().placeTileAtPosition(0,0,antTile);
+        game.getCurrentBoard().placeTileAtPosition(0,0,antTile);
 
-        Board.getBoardInstance().placeTileAtPosition(0,-1,otherTile);
-        Board.getBoardInstance().placeTileAtPosition(0,-1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(0,-1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(0,-1,otherTile);
 
-        Board.getBoardInstance().placeTileAtPosition(1,-1,otherTile);
-        Board.getBoardInstance().placeTileAtPosition(1,-1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(1,-1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(1,-1,otherTile);
 
-        Board.getBoardInstance().placeTileAtPosition(1,0,otherTile);
-        Board.getBoardInstance().placeTileAtPosition(1,0,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(1,0,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(1,0,otherTile);
 
-        Board.getBoardInstance().placeTileAtPosition(0,1,otherTile);
-        Board.getBoardInstance().placeTileAtPosition(0,1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(0,1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(0,1,otherTile);
 
-        Board.getBoardInstance().placeTileAtPosition(-1,1,otherTile);
-        Board.getBoardInstance().placeTileAtPosition(-1,1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(-1,1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(-1,1,otherTile);
 
-        Board.getBoardInstance().placeTileAtPosition(-1,0,otherTile);
-        Board.getBoardInstance().placeTileAtPosition(-1,0,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(-1,0,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(-1,0,otherTile);
 
-        assertFalse(AntMoveHandler.getInstance().canMakeAnyMove(0,0, Hive.Player.WHITE));
+        assertFalse(game.getGenericMoveHandler().getAntMoveHandler().canMakeAnyMove(0,0, Hive.Player.WHITE));
     }
 
     @Test
@@ -56,20 +58,20 @@ public class AntMoveHandlerTest {
         Tile otherTile = new Tile();
         otherTile.setPlayedByPlayer(Hive.Player.BLACK);
         otherTile.setCreature(Hive.Tile.SOLDIER_ANT);
-        Board.getBoardInstance().placeTileAtPosition(0,0,beeTile);
+        game.getCurrentBoard().placeTileAtPosition(0,0,beeTile);
 
-        Board.getBoardInstance().placeTileAtPosition(0,-1,otherTile);
-        Board.getBoardInstance().placeTileAtPosition(0,-1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(0,-1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(0,-1,otherTile);
 
-        Board.getBoardInstance().placeTileAtPosition(1,-1,otherTile);
-        Board.getBoardInstance().placeTileAtPosition(1,-1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(1,-1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(1,-1,otherTile);
 
-        Board.getBoardInstance().placeTileAtPosition(1,0,otherTile);
-        Board.getBoardInstance().placeTileAtPosition(1,0,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(1,0,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(1,0,otherTile);
 
-        Board.getBoardInstance().placeTileAtPosition(0,1,otherTile);
-        Board.getBoardInstance().placeTileAtPosition(0,1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(0,1,otherTile);
+        game.getCurrentBoard().placeTileAtPosition(0,1,otherTile);
 
-        assertTrue(AntMoveHandler.getInstance().canMakeAnyMove(0,0, Hive.Player.WHITE));
+        assertTrue(game.getGenericMoveHandler().getAntMoveHandler().canMakeAnyMove(0,0, Hive.Player.WHITE));
     }
 }

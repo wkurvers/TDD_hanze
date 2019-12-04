@@ -2,6 +2,7 @@ package game;
 
 import creatures.Tile;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,22 +11,19 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardTest {
-
-    @AfterEach
+    private Board gameBoard;
+    @BeforeEach
     void resetBoard() {
-        Board.getBoardInstance().resetBoard();
+        gameBoard = new Board();
     }
 
     @Test
     void testGetEmptyLocation() {
-        Board gameBoard = Board.getBoardInstance();
-
         assertNull(gameBoard.getPosition(0,0));
     }
 
     @Test
     void testGetTileAtLocation(){
-        Board gameBoard = Board.getBoardInstance();
         Tile newTile = new Tile();
         gameBoard.placeTileAtPosition(0,0,newTile);
         assertEquals(gameBoard.getTopTileAtPosition(0,0),newTile);
@@ -33,15 +31,12 @@ class BoardTest {
 
     @Test
     void testPlaceTileAtLocation(){
-        Board gameBoard = Board.getBoardInstance();
         Tile newTile = new Tile();
         gameBoard.placeTileAtPosition(-3,1,newTile);
         assertEquals(gameBoard.getTopTileAtPosition(-3,1),newTile);
     }
 
     private ArrayList setupBoardForTestGetNeighboursForLocation(){
-        Board gameBoard = Board.getBoardInstance();
-
         Tile topLeftTile = new Tile();
         Tile topRightTile = new Tile();
         Tile rightTile = new Tile();
@@ -83,7 +78,7 @@ class BoardTest {
 
     @Test
     void testGetNeighbouringCoordinatesForSpecificLocation() {
-        HashMap<String, int[]> coordinates = Board.getBoardInstance().getNeighbouringCoordinates(0,0);
+        HashMap<String, int[]> coordinates = gameBoard.getNeighbouringCoordinates(0,0);
         for(String direction: coordinates.keySet()) {
             int[] coordinate = coordinates.get(direction);
             switch(direction) {
@@ -113,7 +108,6 @@ class BoardTest {
 
     @Test
     void testGetNeighbouringPositionsSizeIsCorrect() {
-        Board gameBoard = Board.getBoardInstance();
         Tile newTile = new Tile();
 
         gameBoard.placeTileAtPosition(1,-1,newTile);

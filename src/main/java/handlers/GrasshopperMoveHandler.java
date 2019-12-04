@@ -2,18 +2,23 @@ package handlers;
 
 import game.Board;
 import game.Hive;
+import game.HiveGame;
 
 public class GrasshopperMoveHandler implements CreatureMoveHandler {
-    private static GrasshopperMoveHandler instance;
+    private HiveGame game;
+    private GenericMoveHandler moveHandler;
 
-    public static GrasshopperMoveHandler getInstance() {
-        if (instance == null) {
-            instance = new GrasshopperMoveHandler();
-        }
-        return instance;
+    public GrasshopperMoveHandler() {
+
     }
 
-    private GrasshopperMoveHandler() { }
+    public void setGame(HiveGame game) {
+        this.game = game;
+    }
+
+    public void setMoveHandler(GenericMoveHandler moveHandler) {
+        this.moveHandler = moveHandler;
+    }
 
     @Override
     public boolean canMakeAnyMove(int fromQ, int fromR, Hive.Player player) {
@@ -41,7 +46,7 @@ public class GrasshopperMoveHandler implements CreatureMoveHandler {
     }
 
     private boolean isEmptySpot(int toQ, int toR) {
-        return Board.getBoardInstance().getSizeAtPosition(toQ,toR) == 0;
+        return this.game.getCurrentBoard().getSizeAtPosition(toQ,toR) == 0;
     }
 
     public boolean areBetweenLocationsFilled(int fromQ, int fromR, int toQ, int toR) {
@@ -64,13 +69,13 @@ public class GrasshopperMoveHandler implements CreatureMoveHandler {
             case "horizontal":
                 if(toQ > fromQ) {
                     for(int i=fromQ+1; i < toQ; i++){
-                        if(Board.getBoardInstance().getSizeAtPosition(i,fromR) == 0) {
+                        if(this.game.getCurrentBoard().getSizeAtPosition(i,fromR) == 0) {
                             return false;
                         }
                     }
                 } else {
                     for(int i=fromQ-1; i > toQ; i--){
-                        if(Board.getBoardInstance().getSizeAtPosition(i,fromR) == 0) {
+                        if(this.game.getCurrentBoard().getSizeAtPosition(i,fromR) == 0) {
                             return false;
                         }
                     }
@@ -79,13 +84,13 @@ public class GrasshopperMoveHandler implements CreatureMoveHandler {
             case "diagLeft":
                 if(toR > fromR) {
                     for(int i=fromR+1; i < toR; i++){
-                        if(Board.getBoardInstance().getSizeAtPosition(fromQ,i) == 0) {
+                        if(this.game.getCurrentBoard().getSizeAtPosition(fromQ,i) == 0) {
                             return false;
                         }
                     }
                 } else {
                     for(int i=fromR-1; i > toR; i--){
-                        if(Board.getBoardInstance().getSizeAtPosition(fromQ,i) == 0) {
+                        if(this.game.getCurrentBoard().getSizeAtPosition(fromQ,i) == 0) {
                             return false;
                         }
                     }
@@ -96,7 +101,7 @@ public class GrasshopperMoveHandler implements CreatureMoveHandler {
                     int r = fromR;
                     for(int i = fromQ+1; i < toQ; i++) {
                         r -= 1;
-                        if(Board.getBoardInstance().getSizeAtPosition(i,r) == 0) {
+                        if(this.game.getCurrentBoard().getSizeAtPosition(i,r) == 0) {
                             return false;
                         }
                     }
@@ -104,7 +109,7 @@ public class GrasshopperMoveHandler implements CreatureMoveHandler {
                     int r = fromR;
                     for(int i = fromQ-1; i > toQ; i--) {
                         r += 1;
-                        if(Board.getBoardInstance().getSizeAtPosition(i,r) == 0) {
+                        if(this.game.getCurrentBoard().getSizeAtPosition(i,r) == 0) {
                             return false;
                         }
                     }

@@ -1,5 +1,6 @@
 package game;
 
+import com.sun.tools.javac.jvm.Gen;
 import handlers.GenericMoveHandler;
 import handlers.PlaceHandler;
 
@@ -22,6 +23,7 @@ public class HiveGame implements Hive {
 
         genericMoveHandler = new GenericMoveHandler();
         genericMoveHandler.setGame(this);
+        genericMoveHandler.setPlaceHandler(placeHandler);
     }
 
     public Player getCurrentPlayer() {
@@ -29,6 +31,10 @@ public class HiveGame implements Hive {
     }
 
     public Board getCurrentBoard() { return gameBoard; }
+
+    public PlaceHandler getPlaceHandler() {return placeHandler; }
+
+    public GenericMoveHandler getGenericMoveHandler() {return  genericMoveHandler; }
 
     public void switchPlayer() {
         if (currentPlayer == Player.WHITE) {
@@ -55,7 +61,6 @@ public class HiveGame implements Hive {
 
     @Override
     public void move(int fromQ, int fromR, int toQ, int toR) throws IllegalMove {
-        GenericMoveHandler genericMoveHandler = GenericMoveHandler.getGenericMoveHandler();
         creatures.Tile tileToMove = this.gameBoard.getTopTileAtPosition(fromQ,fromR);
         HashMap<String, Integer> goal = new HashMap<>();
         goal.put("q",toQ);
@@ -85,7 +90,7 @@ public class HiveGame implements Hive {
 
     @Override
     public void pass() throws IllegalMove {
-        if(GenericMoveHandler.getGenericMoveHandler().canMakeAnyMove(currentPlayer) && placeHandler.hasTilesToPlay(currentPlayer)) {
+        if(genericMoveHandler.canMakeAnyMove(currentPlayer) && placeHandler.hasTilesToPlay(currentPlayer)) {
             throw new IllegalMove("This player can still make a move");
         } else {
             switchPlayer();
