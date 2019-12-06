@@ -1,17 +1,14 @@
 package handlers;
 import creatures.Tile;
-import game.Board;
-import game.Hive;
+
 import game.HiveGame;
-import game.TileFactory;
-import org.junit.jupiter.api.AfterEach;
+import nl.hanze.hive.Hive;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Stack;
 
 import static org.junit.jupiter.api.Assertions.*;
 public class GenericMoveHandlerTest {

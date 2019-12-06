@@ -1,9 +1,8 @@
 package game;
 
-import creatures.QueenBee;
 import creatures.Tile;
 import handlers.PlaceHandler;
-import org.junit.jupiter.api.AfterEach;
+import nl.hanze.hive.Hive;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -328,20 +327,50 @@ class HiveGameTest {
         });
     }
 
-//    @Test
-//    void testBlackWinsWhenWhiteQueenIsSurrounded() {
-//        assertDoesNotThrow(IllegalMove);
-//        game.play(Hive.Tile.QUEEN_BEE,0,0);//WHITE;
-//        game.play();//BLACK;
-//        game.play();//WHITE;
-//        game.play();//BLACK;
-//        game.play();//WHITE;
-//        game.play();//BLACK;
-//        game.play();//WHITE;
-//        game.play();//BLACK;
-//        game.play();//WHITE;
-//        game.play();//BLACK;
-//        game.play();//WHITE;
-//        game.play();//BLACK;
-//    }
+    @Test
+    void testMoveBeetleOnStack() {
+        assertDoesNotThrow(()-> {
+            game.play(Hive.Tile.QUEEN_BEE,0,0);
+            game.play(Hive.Tile.QUEEN_BEE,-1,0);
+            game.play(Hive.Tile.BEETLE,1,-1);
+            game.play(Hive.Tile.BEETLE,-1,-1);
+            game.move(1,-1,0,0);
+        });
+    }
+
+    @Test
+    void testMoveOpposingQueen() {
+        assertThrows(Hive.IllegalMove.class, () -> {
+            game.play(Hive.Tile.BEETLE,0,0);
+            game.play(Hive.Tile.BEETLE,-1,0);
+            game.play(Hive.Tile.QUEEN_BEE,1,0);
+            game.play(Hive.Tile.QUEEN_BEE,-2,0);
+            game.move(-2,0,0,-1);
+        });
+    }
+
+    @Test
+    void testSlideAntToSurroundedLocation() {
+        Tile blackTile = new Tile();
+        blackTile.setPlayedByPlayer(Hive.Player.BLACK);
+        blackTile.setCreature(Hive.Tile.BEETLE);
+
+        Tile whiteSoldierTile = new Tile();
+        whiteSoldierTile.setPlayedByPlayer(Hive.Player.WHITE);
+        whiteSoldierTile.setCreature(Hive.Tile.SOLDIER_ANT);
+        PlaceHandler placeHandler = game.getPlaceHandler();
+
+        placeHandler.naivePlayTile(blackTile,0,0);
+        placeHandler.naivePlayTile(blackTile,-1,0);
+        placeHandler.naivePlayTile(blackTile,-1,-1);
+        placeHandler.naivePlayTile(blackTile,0,-2);
+        placeHandler.naivePlayTile(blackTile,1,-2);
+        placeHandler.naivePlayTile(blackTile,1,-1);
+
+        placeHandler.naivePlayTile(whiteSoldierTile,1,0);
+
+        assertThrows(Hive.IllegalMove.class, ()-> {
+           game.move(1,0,0,-1);
+        });
+    }
 }

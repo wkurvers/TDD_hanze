@@ -111,7 +111,7 @@ public class GenericMoveHandler {
             this.placeHandler.naivePlayTile(tile,fromQ,fromR);
             throw new Hive.IllegalMove("This tile does not belong to this player");
         }
-        if(checkActuallyMoves(fromQ,fromR,toQ,toR)) {
+        if(!checkActuallyMoves(fromQ,fromR,toQ,toR)) {
             this.placeHandler.naivePlayTile(tile,fromQ,fromR);
             throw new Hive.IllegalMove("This is not a move");
         }
@@ -184,7 +184,7 @@ public class GenericMoveHandler {
     }
 
     private boolean checkActuallyMoves(int fromQ, int fromR, int toQ, int toR) {
-        return fromQ != toQ && fromR != toR;
+        return fromQ != toQ || fromR != toR;
     }
 
     public boolean checkCommonNeighboursSize(int fromQ, int fromR, int toQ, int toR) {
@@ -316,7 +316,10 @@ public class GenericMoveHandler {
     private int calculateTotalTiles(HashMap<String,Integer> locationNode, ArrayList<HashMap<String,Integer>> visited) {
         Stack<HashMap<String,Integer>> queue = new Stack<>();
         queue.add(locationNode);
-        int totalCount = 1;
+        int totalCount = this.game.getCurrentBoard().getSizeAtPosition(locationNode.get("q"),locationNode.get("r"));
+        if(totalCount == 0) {
+            totalCount +=1;
+        }
         while(queue.size() > 0) {
             locationNode = queue.pop();
             if (visited.contains(locationNode)) {
@@ -324,7 +327,7 @@ public class GenericMoveHandler {
             }
             visited.add(locationNode);
             if(visited.size() != 1) {
-                totalCount += this.game.getCurrentBoard().getPosition(locationNode.get("q"),locationNode.get("r")).size();
+                totalCount += this.game.getCurrentBoard().getSizeAtPosition(locationNode.get("q"),locationNode.get("r"));
             }
             ArrayList<HashMap<String,Integer>> successors = getFilledSuccessors(locationNode);
             for (HashMap<String,Integer> child: successors) {

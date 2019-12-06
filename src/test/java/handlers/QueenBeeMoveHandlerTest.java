@@ -1,10 +1,8 @@
 package handlers;
 
 import creatures.Tile;
-import game.Board;
-import game.Hive;
 import game.HiveGame;
-import org.junit.jupiter.api.AfterEach;
+import nl.hanze.hive.Hive;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
