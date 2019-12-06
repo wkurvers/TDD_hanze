@@ -86,7 +86,7 @@ class PlaceHandlerTest {
         placeHandler.playTileTest(tileToPlace.getPlayedByPlayer(),tileToPlace,0,0);
         placeHandler.playTileTest(tileToPlace.getPlayedByPlayer(),tileToPlace,-1,0);
         placeHandler.playTileTest(tileToPlace.getPlayedByPlayer(),tileToPlace,1,0);
-        assertTrue(placeHandler.mustPlayQueen(tileToPlace.getPlayedByPlayer()));
+        assertTrue(placeHandler.mustPlayQueen(tileToPlace.getPlayedByPlayer(),tileToPlace.getCreature()));
     }
 
     @Test
@@ -103,6 +103,6 @@ class PlaceHandlerTest {
         placeHandler.playTileTest(tileToPlace.getPlayedByPlayer(),tileToPlace,0,0);
         placeHandler.playTileTest(tileToPlace.getPlayedByPlayer(),tileToPlace,-1,0);
         placeHandler.playTileTest(queenTile.getPlayedByPlayer(),queenTile,1,0);
-        assertFalse(placeHandler.mustPlayQueen(tileToPlace.getPlayedByPlayer()));
+        assertFalse(placeHandler.mustPlayQueen(tileToPlace.getPlayedByPlayer(),tileToPlace.getCreature()));
     }
 }

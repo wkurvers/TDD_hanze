@@ -51,6 +51,69 @@ class HiveGameTest {
     }
 
     @Test
+    void testBlackWinsWhenShouldWin() {
+        PlaceHandler placeHandler = game.getPlaceHandler();
+
+        Tile blackTile = new Tile();
+        blackTile.setCreature(Hive.Tile.SOLDIER_ANT);
+        blackTile.setPlayedByPlayer(Hive.Player.BLACK);
+
+        Tile whiteQueenTile = new Tile();
+        whiteQueenTile.setPlayedByPlayer(Hive.Player.WHITE);
+        whiteQueenTile.setCreature(Hive.Tile.QUEEN_BEE);
+
+        placeHandler.playTileTest(whiteQueenTile.getPlayedByPlayer(),whiteQueenTile,0,0);
+
+        placeHandler.playTileTest(blackTile.getPlayedByPlayer(),blackTile,-1,0);
+        placeHandler.playTileTest(blackTile.getPlayedByPlayer(),blackTile,0,-1);
+        placeHandler.playTileTest(blackTile.getPlayedByPlayer(),blackTile,1,-1);
+        placeHandler.playTileTest(blackTile.getPlayedByPlayer(),blackTile,1,0);
+        placeHandler.playTileTest(blackTile.getPlayedByPlayer(),blackTile,0,1);
+        placeHandler.playTileTest(blackTile.getPlayedByPlayer(),blackTile,-1,1);
+        assertTrue(game.isWinner(Hive.Player.BLACK));
+    }
+
+    @Test
+    void testIsDraw() {
+        PlaceHandler placeHandler = game.getPlaceHandler();
+
+        Tile blackQueenTile = new Tile();
+        blackQueenTile.setPlayedByPlayer(Hive.Player.BLACK);
+        blackQueenTile.setCreature(Hive.Tile.QUEEN_BEE);
+
+        Tile whiteQueenTile = new Tile();
+        whiteQueenTile.setCreature(Hive.Tile.QUEEN_BEE);
+        whiteQueenTile.setPlayedByPlayer(Hive.Player.WHITE);
+
+        Tile blackTile = new Tile();
+        blackTile.setPlayedByPlayer(Hive.Player.BLACK);
+        blackTile.setCreature(Hive.Tile.GRASSHOPPER);
+
+        Tile whiteTile = new Tile();
+        whiteTile.setPlayedByPlayer(Hive.Player.WHITE);
+        whiteTile.setCreature(Hive.Tile.SOLDIER_ANT);
+
+        placeHandler.naivePlayTile(blackQueenTile,-2,0);
+
+        placeHandler.naivePlayTile(whiteQueenTile,1,0);
+
+        placeHandler.naivePlayTile(whiteTile,-2,-1);
+        placeHandler.naivePlayTile(whiteTile,-1,-1);
+        placeHandler.naivePlayTile(whiteTile,-1,0);
+        placeHandler.naivePlayTile(whiteTile,-2,1);
+        placeHandler.naivePlayTile(whiteTile,-3,1);
+        placeHandler.naivePlayTile(whiteTile,-3,0);
+
+        placeHandler.naivePlayTile(blackTile,0,1);
+        placeHandler.naivePlayTile(blackTile,1,1);
+        placeHandler.naivePlayTile(blackTile,2,0);
+        placeHandler.naivePlayTile(blackTile,2,-1);
+        placeHandler.naivePlayTile(blackTile,1,-1);
+        placeHandler.naivePlayTile(blackTile,0,0);
+        assertTrue(game.isDraw());
+    }
+
+    @Test
     void testWhiteWinsWhenShouldNotWin() {
         PlaceHandler placeHandler = game.getPlaceHandler();
 
@@ -155,9 +218,9 @@ class HiveGameTest {
         assertDoesNotThrow(() -> {
             game.play(Hive.Tile.BEETLE,0,0); //WHITE
             game.play(Hive.Tile.QUEEN_BEE,-1,0); //BLACK
-            game.play(Hive.Tile.QUEEN_BEE,0,1); //WHITE
-            game.play(Hive.Tile.BEETLE,-1,-1); //BLACK
-            game.move(0,1,-1,1); //WHITE
+            game.play(Hive.Tile.QUEEN_BEE,1,0); //WHITE
+            game.play(Hive.Tile.BEETLE,-2,0); //BLACK
+            game.move(1,0,1,-1); //WHITE
         });
     }
 
@@ -245,4 +308,40 @@ class HiveGameTest {
             game.move(1,0,-3,0); //WHITE
         });
     }
+
+    @Test
+    void testPlayQueenLaterThenTurnFour() {
+        assertThrows(Hive.IllegalMove.class, () -> {
+            game.play(Hive.Tile.GRASSHOPPER, 0,0);//WHITE
+            game.play(Hive.Tile.GRASSHOPPER, -1,0);//BLACK
+            game.play(Hive.Tile.GRASSHOPPER, 1,0);//WHITE
+            game.play(Hive.Tile.GRASSHOPPER, -2,0);
+        });
+    }
+
+    @Test
+    void testMoveWithoutPlayedQueen() {
+        assertThrows(Hive.IllegalMove.class, () -> {
+            game.play(Hive.Tile.GRASSHOPPER, 0,0);//WHITE
+            game.play(Hive.Tile.GRASSHOPPER, -1,0);//BLACK
+            game.move(0,0,-2,0);//WHITE
+        });
+    }
+
+//    @Test
+//    void testBlackWinsWhenWhiteQueenIsSurrounded() {
+//        assertDoesNotThrow(IllegalMove);
+//        game.play(Hive.Tile.QUEEN_BEE,0,0);//WHITE;
+//        game.play();//BLACK;
+//        game.play();//WHITE;
+//        game.play();//BLACK;
+//        game.play();//WHITE;
+//        game.play();//BLACK;
+//        game.play();//WHITE;
+//        game.play();//BLACK;
+//        game.play();//WHITE;
+//        game.play();//BLACK;
+//        game.play();//WHITE;
+//        game.play();//BLACK;
+//    }
 }

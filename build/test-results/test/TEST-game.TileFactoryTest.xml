@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="game.TileFactoryTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2019-12-04T13:43:47" hostname="jelmer-Aspire-V5-591G" time="0.005">
+<testsuite name="game.TileFactoryTest" tests="5" skipped="0" failures="0" errors="0" timestamp="2019-12-06T12:25:58" hostname="jelmer-Aspire-V5-591G" time="0.003">
   <properties/>
-  <testcase name="testCanCreateGrasshopper()" classname="game.TileFactoryTest" time="0.0"/>
-  <testcase name="testCanCreateSoldierAnt()" classname="game.TileFactoryTest" time="0.001"/>
-  <testcase name="testCanCreateBeetle()" classname="game.TileFactoryTest" time="0.001"/>
-  <testcase name="testCanCreateSpider()" classname="game.TileFactoryTest" time="0.0"/>
+  <testcase name="testCanCreateGrasshopper()" classname="game.TileFactoryTest" time="0.001"/>
+  <testcase name="testCanCreateSoldierAnt()" classname="game.TileFactoryTest" time="0.0"/>
+  <testcase name="testCanCreateBeetle()" classname="game.TileFactoryTest" time="0.0"/>
+  <testcase name="testCanCreateSpider()" classname="game.TileFactoryTest" time="0.001"/>
   <testcase name="testCanCreateQueenBee()" classname="game.TileFactoryTest" time="0.0"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

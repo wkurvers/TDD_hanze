@@ -1,8 +1,8 @@
 package handlers;
 
 import creatures.Tile;
-import game.Hive;
 import game.HiveGame;
+import nl.hanze.hive.Hive;
 
 import java.util.ArrayList;
 import java.util.HashMap;

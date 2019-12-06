@@ -1,6 +1,7 @@
 package game;
 
 import creatures.*;
+import nl.hanze.hive.Hive;
 
 public class TileFactory {
     public static Tile makeTile(Hive.Tile creature, Hive.Player playedByPlayer) {

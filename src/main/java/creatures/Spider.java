@@ -1,6 +1,6 @@
 package creatures;
 
-import game.Hive;
+import nl.hanze.hive.Hive;
 
 public class Spider extends Tile {
     public Spider(Hive.Player playedByPlayer) {

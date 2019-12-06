@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="handlers.GrasshopperMoveHandlerTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2019-12-04T13:43:48" hostname="jelmer-Aspire-V5-591G" time="0.009">
+<testsuite name="handlers.GrasshopperMoveHandlerTest" tests="9" skipped="0" failures="0" errors="0" timestamp="2019-12-06T12:25:59" hostname="jelmer-Aspire-V5-591G" time="0.009">
   <properties/>
   <testcase name="testLocationsFilledHorizontal()" classname="handlers.GrasshopperMoveHandlerTest" time="0.0"/>
   <testcase name="testIsStraightLineDiagonalLeft()" classname="handlers.GrasshopperMoveHandlerTest" time="0.001"/>
@@ -8,7 +8,7 @@
   <testcase name="testLocationsFilledDiagonalLeft()" classname="handlers.GrasshopperMoveHandlerTest" time="0.001"/>
   <testcase name="testLocationsFilledDiagonalRight()" classname="handlers.GrasshopperMoveHandlerTest" time="0.001"/>
   <testcase name="testIsStraightLineHorizontal()" classname="handlers.GrasshopperMoveHandlerTest" time="0.001"/>
-  <testcase name="testJumpIsMoreThenOne()" classname="handlers.GrasshopperMoveHandlerTest" time="0.0"/>
+  <testcase name="testJumpIsMoreThenOne()" classname="handlers.GrasshopperMoveHandlerTest" time="0.001"/>
   <testcase name="testJumpIsOne()" classname="handlers.GrasshopperMoveHandlerTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>

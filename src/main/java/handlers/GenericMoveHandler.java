@@ -3,8 +3,8 @@ package handlers;
 
 import creatures.Tile;
 import game.Board;
-import game.Hive;
 import game.HiveGame;
+import nl.hanze.hive.Hive;
 
 import java.util.*;
 
@@ -95,10 +95,17 @@ public class GenericMoveHandler {
     }
 
     public void moveTile(int fromQ, int fromR, int toQ, int toR, Hive.Player player) throws Hive.IllegalMove {
-        int tileCountBefore = getTotalTileCount(player);
         Tile tile = this.game.getCurrentBoard().removeTopTileAtPosition(fromQ,fromR);
         if (tile == null) {
             throw new Hive.IllegalMove("There is no tile to move");
+        }
+        if (!this.placeHandler.checkHasPlayedQueen(player)) {
+            this.placeHandler.naivePlayTile(tile,fromQ,fromR);
+            throw new Hive.IllegalMove("This player's queen has not been played yet");
+        }
+        int tileCountBefore = getTotalTileCount(player);
+        if (tile.getCreature() != Hive.Tile.QUEEN_BEE) {
+            tileCountBefore += 1;
         }
         if (tile.getPlayedByPlayer() != player) {
             this.placeHandler.naivePlayTile(tile,fromQ,fromR);
@@ -107,10 +114,6 @@ public class GenericMoveHandler {
         if(checkActuallyMoves(fromQ,fromR,toQ,toR)) {
             this.placeHandler.naivePlayTile(tile,fromQ,fromR);
             throw new Hive.IllegalMove("This is not a move");
-        }
-        if (!this.placeHandler.checkHasPlayedQueen(player)) {
-            this.placeHandler.naivePlayTile(tile,fromQ,fromR);
-            throw new Hive.IllegalMove("This player's queen has not been played yet");
         }
         if (!checkContactExists(toQ,toR)) {
             this.placeHandler.naivePlayTile(tile,fromQ,fromR);
@@ -313,14 +316,16 @@ public class GenericMoveHandler {
     private int calculateTotalTiles(HashMap<String,Integer> locationNode, ArrayList<HashMap<String,Integer>> visited) {
         Stack<HashMap<String,Integer>> queue = new Stack<>();
         queue.add(locationNode);
-        int totalCount = 0;
+        int totalCount = 1;
         while(queue.size() > 0) {
             locationNode = queue.pop();
             if (visited.contains(locationNode)) {
                 continue;
             }
             visited.add(locationNode);
-            totalCount += this.game.getCurrentBoard().getPosition(locationNode.get("q"),locationNode.get("r")).size();
+            if(visited.size() != 1) {
+                totalCount += this.game.getCurrentBoard().getPosition(locationNode.get("q"),locationNode.get("r")).size();
+            }
             ArrayList<HashMap<String,Integer>> successors = getFilledSuccessors(locationNode);
             for (HashMap<String,Integer> child: successors) {
                 if (!visited.contains(child)) {

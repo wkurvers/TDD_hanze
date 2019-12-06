@@ -1,22 +1,20 @@
 package game;
 
-import com.sun.tools.javac.jvm.Gen;
 import handlers.GenericMoveHandler;
 import handlers.PlaceHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import nl.hanze.hive.Hive;
 
 public class HiveGame implements Hive {
     private Player currentPlayer;
-    private Player opponent;
     private Board gameBoard;
     private PlaceHandler placeHandler;
     private GenericMoveHandler genericMoveHandler;
 
     public HiveGame() {
         currentPlayer = Player.WHITE;
-        opponent = Player.BLACK;
         gameBoard = new Board();
         placeHandler = new PlaceHandler();
         placeHandler.setGame(this);
@@ -39,16 +37,10 @@ public class HiveGame implements Hive {
     public void switchPlayer() {
         if (currentPlayer == Player.WHITE) {
             currentPlayer = Player.BLACK;
-            opponent = Player.WHITE;
         } else if(currentPlayer == Player.BLACK) {
             currentPlayer = Player.WHITE;
-            opponent = Player.BLACK;
         }
     }
-
-//    public void updateGame() {
-//        placeHandler.setGame(this);
-//    }
 
     @Override
     public void play(Tile tile, int q, int r) throws IllegalMove {
@@ -97,8 +89,19 @@ public class HiveGame implements Hive {
         }
     }
 
+    private Player getOpponent(Player player) {
+        switch (player){
+            case WHITE:
+                return Player.BLACK;
+            case BLACK:
+                return Player.WHITE;
+        }
+        return Player.BLACK;
+    }
+
     @Override
     public boolean isWinner(Player player) {
+        Player opponent = getOpponent(player);
         if(placeHandler.checkHasPlayedQueen(opponent)) {
             HashMap<String, Integer> queenLocation = placeHandler.getQueenLocation(opponent);
 
@@ -119,6 +122,6 @@ public class HiveGame implements Hive {
 
     @Override
     public boolean isDraw() {
-        return false;
+        return isWinner(Player.WHITE) && isWinner(Player.BLACK);
     }
 }

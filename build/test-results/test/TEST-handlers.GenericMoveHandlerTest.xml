@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="handlers.GenericMoveHandlerTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2019-12-04T13:43:48" hostname="jelmer-Aspire-V5-591G" time="0.068">
+<testsuite name="handlers.GenericMoveHandlerTest" tests="18" skipped="0" failures="0" errors="0" timestamp="2019-12-06T12:25:59" hostname="jelmer-Aspire-V5-591G" time="0.06">
   <properties/>
-  <testcase name="testSlideIsOneMove()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
-  <testcase name="testSlideWhenLoseContact()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
-  <testcase name="testNoIslandExistsWhenDont()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
-  <testcase name="testBlackCannotMoveWhiteTile()" classname="handlers.GenericMoveHandlerTest" time="0.002"/>
+  <testcase name="testSlideIsOneMove()" classname="handlers.GenericMoveHandlerTest" time="0.0"/>
+  <testcase name="testSlideWhenLoseContact()" classname="handlers.GenericMoveHandlerTest" time="0.0"/>
+  <testcase name="testNoIslandExistsWhenDont()" classname="handlers.GenericMoveHandlerTest" time="0.0"/>
+  <testcase name="testBlackCannotMoveWhiteTile()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
   <testcase name="testSlideWhenKeepContact()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
   <testcase name="testBfsTileCountSearch()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
-  <testcase name="testValidSlideAnt()" classname="handlers.GenericMoveHandlerTest" time="0.017"/>
-  <testcase name="testSlideWhenDirectionNotBlocked()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
+  <testcase name="testValidSlideAnt()" classname="handlers.GenericMoveHandlerTest" time="0.009"/>
+  <testcase name="testSlideWhenDirectionNotBlocked()" classname="handlers.GenericMoveHandlerTest" time="0.0"/>
   <testcase name="testValidSlideSpider()" classname="handlers.GenericMoveHandlerTest" time="0.005"/>
   <testcase name="testSlideIsBiggerThenOneMove()" classname="handlers.GenericMoveHandlerTest" time="0.0"/>
   <testcase name="testNoIslandExistsWhenDo()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
-  <testcase name="testInvalidSlideSpider()" classname="handlers.GenericMoveHandlerTest" time="0.006"/>
+  <testcase name="testInvalidSlideSpider()" classname="handlers.GenericMoveHandlerTest" time="0.005"/>
   <testcase name="testCanMoveATile()" classname="handlers.GenericMoveHandlerTest" time="0.0"/>
   <testcase name="testSlideWhenDirectionBlocked()" classname="handlers.GenericMoveHandlerTest" time="0.0"/>
   <testcase name="testCannotMoveToNoContactLocation()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
-  <testcase name="testCannotMoveTileWhenQueenNotPlaced()" classname="handlers.GenericMoveHandlerTest" time="0.002"/>
+  <testcase name="testCannotMoveTileWhenQueenNotPlaced()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
   <testcase name="testInvalidSlideAnt()" classname="handlers.GenericMoveHandlerTest" time="0.021"/>
   <testcase name="testCannotEmptyLocation()" classname="handlers.GenericMoveHandlerTest" time="0.001"/>
   <system-out><![CDATA[]]></system-out>

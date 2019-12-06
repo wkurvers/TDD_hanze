@@ -1,6 +1,6 @@
 package creatures;
 
-import game.Hive;
+import nl.hanze.hive.Hive;
 
 public class QueenBee extends Tile {
     public QueenBee(Hive.Player playedByPlayer) {

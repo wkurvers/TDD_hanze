@@ -1,6 +1,7 @@
 package creatures;
 
-import game.Hive;
+
+import nl.hanze.hive.Hive;
 
 public class Tile {
     private Hive.Player playedByPlayer;

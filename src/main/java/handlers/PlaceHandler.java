@@ -1,9 +1,8 @@
 package handlers;
 
 import creatures.Tile;
-import game.Hive;
-import game.Board;
 import game.HiveGame;
+import nl.hanze.hive.Hive;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -79,7 +78,7 @@ public class PlaceHandler {
 
     private boolean checkCanPlayTile(Hive.Player player, Hive.Tile tile, int q, int r) {
         if (whiteTileCountPlayed + blackTileCountPlayed > 0) {
-            return canPlayerPlayTile(player,tile) && checkLocationEmpty(q,r) && checkContactExists(q,r);
+            return canPlayerPlayTile(player,tile) && checkLocationEmpty(q,r) && checkContactExists(q,r) && !mustPlayQueen(player, tile);
         }
         return canPlayerPlayTile(player,tile) && checkLocationEmpty(q,r);
     }
@@ -134,7 +133,8 @@ public class PlaceHandler {
         ArrayList<Tile> neighbours = game.getCurrentBoard().getNeighbours(q, r);
         for (Tile tile : neighbours) {
             if (tile != null) {
-                if (whiteTileCountPlayed > 0 && blackTileCountPlayed > 0) {
+                int totalTilesPlayed = whiteTileCountPlayed + blackTileCountPlayed;
+                if (totalTilesPlayed > 1) {
                     return isNotOpponent(tile);
                 }
                 return true;
@@ -203,25 +203,16 @@ public class PlaceHandler {
         return hasPlayedQueen;
     }
 
-    public boolean mustPlayQueen(Hive.Player player) {
+    public boolean mustPlayQueen(Hive.Player player, Hive.Tile tile) {
         /*
             If a player has played 3 tiles and not yet the queen, the 4th tile must be the queen
          */
         if (!checkHasPlayedQueen(player)) { //Player has not played queen yet
-            int tileCountPlayed;
-            switch (player) {
-                case WHITE:
-                    tileCountPlayed = whiteTileCountPlayed;
-                    break;
-                case BLACK:
-                    tileCountPlayed = blackTileCountPlayed;
-                    break;
-                default:
-                    System.out.println("Option " + player + " unknown reverting to WHITE");
-                    tileCountPlayed = whiteTileCountPlayed;
-                    break;
+            int tileCountPlayed = whiteTileCountPlayed + blackTileCountPlayed;
+            boolean mustPlayQueen = tileCountPlayed == 3;
+            if(mustPlayQueen) { //If the player must play the queen the tile played must be the queen
+                return tile != Hive.Tile.QUEEN_BEE;
             }
-            return tileCountPlayed <= 3;
         }
         return false;
     }

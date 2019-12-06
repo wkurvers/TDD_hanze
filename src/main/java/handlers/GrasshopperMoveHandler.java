@@ -1,8 +1,8 @@
 package handlers;
 
 import game.Board;
-import game.Hive;
 import game.HiveGame;
+import nl.hanze.hive.Hive;
 
 public class GrasshopperMoveHandler implements CreatureMoveHandler {
     private HiveGame game;

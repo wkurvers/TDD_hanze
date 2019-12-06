@@ -1,14 +1,11 @@
 package handlers;
 
 import creatures.Tile;
-import game.Board;
-import game.Hive;
 import game.HiveGame;
+import nl.hanze.hive.Hive;
 
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashMap;
-import java.util.Stack;
 
 public class SpiderMoveHandler implements CreatureMoveHandler {
     private HiveGame game;

@@ -1,4 +1,4 @@
-package game;
+package nl.hanze.hive;
 
 public interface Hive {
     /**
