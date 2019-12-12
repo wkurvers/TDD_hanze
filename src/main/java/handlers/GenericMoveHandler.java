@@ -142,7 +142,7 @@ public class GenericMoveHandler {
             this.placeHandler.naivePlayTile(tile, fromQ, fromR);
             throw new Hive.IllegalMove("This slide is blocked");
         }
-        if (!checkWhileSlidingKeepContact(fromQ, fromR, toQ, toR)) {
+        if (!checkWhileSlidingKeepContact(fromQ, fromR, toQ, toR)) { //! FLIP
             this.placeHandler.naivePlayTile(tile, fromQ, fromR);
             throw new Hive.IllegalMove("This slide does not keep contact");
         }
@@ -170,7 +170,14 @@ public class GenericMoveHandler {
     }
 
     public boolean checkSlideDistanceIsOne(int fromQ, int fromR, int toQ, int toR) {
-        return Math.abs(Math.abs(fromQ)-Math.abs(toQ)) <= 1 && Math.abs(Math.abs(fromR)-Math.abs(toR)) <= 1;
+        HashMap<String, int[]> neighbours = this.game.getCurrentBoard().getNeighbouringCoordinates(fromQ,fromR);
+        for(String direction : neighbours.keySet()) {
+            int[] coordinate = neighbours.get(direction);
+            if(coordinate[0] == toQ && coordinate[1] == toR) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean checkContactExists(int q, int r) {
@@ -439,18 +446,27 @@ public class GenericMoveHandler {
     }
 
     public void tryMakeSlidingMove(ArrayList<ArrayList<HashMap<String, Integer>>> validPaths, Hive.Player currentPlayer) throws Hive.IllegalMove {
+        boolean succesfullMove = false;
         if(validPaths.size() > 0) {
             for(ArrayList<HashMap<String, Integer>> validPath: validPaths) {
                     for(int i=0; i<validPath.size()-1;i++) {
+                        if(succesfullMove) {
+                            continue;
+                        }
                         HashMap<String, Integer> location = validPath.get(i);
                         HashMap<String, Integer> locationToMoveTo = validPath.get(i+1);
-                    try {
-                        this.slideTile(location.get("q"),location.get("r"),locationToMoveTo.get("q"),locationToMoveTo.get("r"),currentPlayer);
-                    } catch (Hive.IllegalMove ex) {
-                        this.resetMove(location.get("q"),location.get("r"),locationToMoveTo.get("q"),locationToMoveTo.get("r"));
-                        continue;
-                    }
+                        try {
+                            this.slideTile(location.get("q"),location.get("r"),locationToMoveTo.get("q"),locationToMoveTo.get("r"),currentPlayer);
+
+                            succesfullMove = true;
+                        } catch (Hive.IllegalMove ex) {
+                            this.resetMove(location.get("q"),location.get("r"),locationToMoveTo.get("q"),locationToMoveTo.get("r"));
+                            continue;
+                        }
                 }
+            }
+            if(!succesfullMove) {
+                throw new Hive.IllegalMove("This tile has no valid sliding paths");
             }
         } else {
             throw new Hive.IllegalMove("This tile cannot move to that location");

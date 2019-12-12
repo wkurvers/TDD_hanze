@@ -64,4 +64,9 @@ public class GrasshopperMoveHandlerTest {
         game.getCurrentBoard().placeTileAtPosition(2,0,new Tile());
         assertTrue(game.getGenericMoveHandler().getGrasshopperMoveHandler().areBetweenLocationsFilled(0,0,3,0));
     }
+
+    @Test
+    void testJumpMoreThenOne() {
+        assertFalse(game.getGenericMoveHandler().getGrasshopperMoveHandler().isJumpOne(-1,-1,-1,2));
+    }
 }

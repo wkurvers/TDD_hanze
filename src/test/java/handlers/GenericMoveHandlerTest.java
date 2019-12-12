@@ -357,4 +357,76 @@ public class GenericMoveHandlerTest {
         ArrayList<ArrayList<HashMap<String, Integer>>> validPaths = genericMoveHandler.findPathToLocation(1,-2, tile.getPlayedByPlayer(),tile.getCreature(),null,goal,0,3);
         assertEquals(0,validPaths.size());
     }
+
+    @Test
+    void testSlidingDistanceIs1Situation1() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(0,0,-1,0));
+    }
+
+    @Test
+    void testSlidingDistanceIs1Situation2() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(0,0,0,-1));
+    }
+
+    @Test
+    void testSlidingDistanceIs1Situation3() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(0,0,1,-1));
+    }
+
+    @Test
+    void testSlidingDistanceIs1Situation4() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(0,0,1,0));
+    }
+
+    @Test
+    void testSlidingDistanceIs1Situation5() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(0,0,0,1));
+    }
+
+    @Test
+    void testSlidingDistanceIs1Situation6() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(-2,1,-3,1));
+    }
+
+    @Test
+    void testSlidingDistanceIs1Situation7() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(-2,1,-2,0));
+    }
+
+    @Test
+    void testSlidingDistanceIs1Situation8() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(-2,1,-1,0));
+    }
+
+    @Test
+    void testSlidingDistanceIs1Situation9() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(-2,1,-1,1));
+    }
+
+    @Test
+    void testSlidingDistanceIs1Situation10() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(-2,1,-2,2));
+    }
+
+    @Test
+    void testSlidingDistanceIs1Situation11() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertTrue(genericMoveHandler.checkSlideDistanceIsOne(-2,1,-3,2));
+    }
+
+    @Test
+    void testSlidingDistanceIsNot1Situation12() {
+        GenericMoveHandler genericMoveHandler = game.getGenericMoveHandler();
+        assertFalse(genericMoveHandler.checkSlideDistanceIsOne(-1,-1,-1,2));
+    }
 }

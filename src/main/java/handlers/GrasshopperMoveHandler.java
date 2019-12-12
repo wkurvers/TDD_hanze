@@ -4,6 +4,8 @@ import game.Board;
 import game.HiveGame;
 import nl.hanze.hive.Hive;
 
+import java.util.HashMap;
+
 public class GrasshopperMoveHandler implements CreatureMoveHandler {
     private HiveGame game;
     private GenericMoveHandler moveHandler;
@@ -31,7 +33,14 @@ public class GrasshopperMoveHandler implements CreatureMoveHandler {
     }
 
     public boolean isJumpOne(int fromQ, int fromR, int toQ, int toR) {
-        return Math.abs(Math.abs(fromQ)-Math.abs(toQ)) <= 1 && Math.abs(Math.abs(fromR)-Math.abs(toR)) <= 1;
+        HashMap<String, int[]> neighbours = game.getCurrentBoard().getNeighbouringCoordinates(fromQ,fromR);
+        for(String direction : neighbours.keySet()) {
+            int[] coordinate = neighbours.get(direction);
+            if(coordinate[0] == toQ && coordinate[1] == toR) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean isStraightLine(int fromQ, int fromR, int toQ, int toR) {
